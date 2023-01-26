@@ -28,12 +28,14 @@
        covariates=data,
        subset,
        method = c("mincon", "clik2", "palm", "adapcl"),
+       penalised = FALSE,
        improve.type = c("none", "clik1", "wclik1", "quasi"),
        improve.args = list(),
        weightfun=NULL,
        control=list(),
        stabilize=TRUE,
        algorithm,
+       trajectory=FALSE,
        statistic="K",
        statargs=list(),
        rmax = NULL,
@@ -52,12 +54,14 @@
        covariates=data,
        subset,
        method = c("mincon", "clik2", "palm", "adapcl"),
+       penalised = FALSE,
        improve.type = c("none", "clik1", "wclik1", "quasi"),
        improve.args = list(),
        weightfun=NULL,
        control=list(),
        stabilize=TRUE,
        algorithm,
+       trajectory=FALSE,
        statistic="K",
        statargs=list(),
        rmax = NULL,
@@ -110,6 +114,11 @@
     or \code{"palm"} for Palm likelihood.
     Partially matched.
   }
+  \item{penalised}{
+    Logical value specifying whether the objective function (the composite
+    likelihood or contrast) should be modified by adding a penalty against
+    extreme values of cluster scale. 
+  }
 \item{improve.type}{
     Method for updating the initial estimate of the trend.
     Initially the trend is estimated as if the process
@@ -130,7 +139,8 @@
   \item{weightfun}{
     Optional weighting function \eqn{w}
     in the composite likelihoods or Palm likelihood.
-    A \code{function} in the \R language.
+    A \code{function} in the \R language,
+    or one of the strings \code{"threshold"} or \code{"taper"}.
     See Details.
   }
   \item{control}{
@@ -154,6 +164,10 @@
     equation solver \code{\link[nleqslv]{nleqslv}}
     (renamed as the argument \code{method} to \code{\link[nleqslv]{nleqslv}})
     with default \code{"Bryden"}.
+  }
+  \item{trajectory}{
+    Logical value specifying whether to save the history of all
+    function evaluations performed by the optimization algorithm.
   }
   \item{statistic}{
     Name of the summary statistic to be used
@@ -298,7 +312,15 @@
       If this is missing or \code{NULL} then the default is
       a threshold weight function,
       \eqn{w(d) = 1(d \le R)}{w(d) = 1(d <= R)}, where \eqn{R} is \code{rmax/2}.
-
+      If it is specified, the argument \code{weightfun} should
+      be a \code{function} in the \R language with one argument.
+      Alternatively \code{weightfun} may be
+      one of the strings \code{"threshold"} or \code{"taper"}
+      representing the functions
+      \eqn{w(d) = 1(d \le R)}{w(d) = 1(d <= R)}
+      and
+      \eqn{w(d) = min(1, R/d)} respectively.
+      
       The optimisation is performed by the generic
       optimisation algorithm \code{\link[stats]{optim}}.
     }
@@ -366,6 +388,15 @@
       must be installed in order to use this option.
     }   
   }
+  If \code{penalised=TRUE}, the fitting procedure is modified by
+  adding a penalty against extreme values of the cluster scale,
+  as proposed by Baddeley et al (2022).
+
+  If \code{trajectory=TRUE}, the resulting object contains the history
+  of all points in the cluster parameter space which were evaluated by
+  the optimization algorithm. The trajectory can be extracted by
+  \code{traj(fit)} or \code{traj(obsurf(fit))} where \code{fit} is the
+  fitted model object.
 }
 \section{Cluster parameters for Neyman-Scott models}{
   For Neyman-Scott models, the fitting procedure searches
@@ -551,6 +582,11 @@
   For fitting Poisson or Gibbs point process models, see \code{\link{ppm}}.
 }
 \references{
+  Baddeley, A., Davies, T.M., Hazelton, M.L., Rakshit, S. and Turner,
+  R. (2022) Fundamental problems in fitting spatial cluster
+  process models. \emph{Spatial Statistics} \bold{52}, 100709.
+  DOI: \code{10.1016/j.spasta.2022.100709}
+
   Guan, Y. (2006) 
   A composite likelihood approach in fitting spatial point process models.
   \emph{Journal of the American Statistical Association}
@@ -605,10 +641,12 @@
   }
 
   # Different fitting techniques
-  kppm(redwood ~ 1, "Thomas", method="c")
-  kppm(redwood ~ 1, "Thomas", method="p")
+  fitc <- kppm(redwood ~ 1, "Thomas", method="c")
+  fitp <- kppm(redwood ~ 1, "Thomas", method="p")
+  # penalised fit
+  fitmp <- kppm(redwood ~ 1, "Thomas", penalised=TRUE)
   # quasi-likelihood improvement 
-  kppm(redwood ~ x, "Thomas", improve.type = "quasi")
+  fitq <- kppm(redwood ~ x, "Thomas", improve.type = "quasi")
 
   if(!online) spatstat.options(op)
 }
@@ -617,6 +655,8 @@
   with contributions from Abdollah Jalilian and Rasmus Waagepetersen.
   Adaptive composite likelihood method contributed by Chiara Fend
   and modified by Adrian Baddeley.
+  Penalised optimization developed by Adrian Baddeley, Tilman Davies
+  and Martin Hazelton.
 }
 \keyword{spatial}
 \keyword{models}

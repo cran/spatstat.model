@@ -1,4 +1,116 @@
 
+        CHANGES IN spatstat.model VERSION 3.1-2
+
+OVERVIEW
+
+    o Minor changes to satisfy CRAN package checker.
+    
+
+        CHANGES IN spatstat.model VERSION 3.1-1
+
+OVERVIEW
+
+    o We thank Bethany Macdonald for contributions.
+    
+    o kppm has been accelerated when method='palm' or 'clik2'
+
+    o kppm can save the history of the optimisation algorithm.
+
+    o Bug fixes and internal tweaks.
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o kppm
+    New argument 'trajectory' specifies whether to save the history
+    of function evaluations performed by the optimization algorithm.
+
+    o kppm
+    Computation accelerated when 'method="palm"' or 'method='clik2'".
+    [Kindly contributed by Bethany Macdonald.]
+    
+BUG FIXES
+
+    o simulate.kppm
+    If the model was very close to a Poisson process, and if saveLambda=TRUE was selected,
+    the attribute "Lambda" was incorrectly labelled "lambda".
+    Fixed.
+
+    o simulate.kppm
+    Simulation of the variance-gamma model terminated with an error about the value of 'nu' 
+    (with recent versions of spatstat.random).
+    Fixed.
+    
+    o kppm
+    Terminated with an error about missing argument 'A', if penalised=TRUE.
+    Fixed.
+
+    o summary.kppm
+    Did not correctly recognise when a model was fitted using a penalty.
+    Fixed.
+    
+        CHANGES IN spatstat.model VERSION 3.1-0
+
+OVERVIEW
+
+    o We thank Tilman Davies and Martin Hazelton for contributions.
+
+    o Penalised model-fitting for Neyman-Scott cluster process models.
+
+    o Index of the strength of clustering in a Neyman-Scott cluster process model.
+    
+    o Probability of having any siblings.
+
+    o More information is printed about Neyman-Scott cluster process models.
+    
+    o Minor improvements.
+
+NEW CLASSES
+
+    o traj
+    Trajectory (history of function evaluations) in a model
+    that was fitted by optimisation.
+    
+NEW FUNCTIONS
+
+    o panysib
+    Probability that a point in a cluster process has any siblings.
+
+    o is.poissonclusterprocess
+    Detects whether a given model is a Poisson cluster process
+    (which includes Neyman-Scott processes).
+
+    o traj, print.traj, plot.traj, lines.traj
+    Extract, print and plot the trajectory of function evaluations.
+
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o kppm
+    New argument 'penalised' supports penalised model-fitting with a penalty against
+    extremely large or small values of the cluster scale.
+
+    o print.kppm, summary.kppm
+    Additional characteristics of the fitted model are reported,
+    including the cluster strength 'phi' and the sibling probability.
+
+    o varcount
+    New argument 'relative' (supports calculation of the overdispersion index).
+
+    o plot.palmdiag
+    Improved calculation of y axis limits.
+    
+        CHANGES IN spatstat.model VERSION 3.0-3
+
+OVERVIEW
+
+    o Palm intensity diagnostic.
+
+NEW FUNCTIONS
+
+    o palmdiagnose, plot.palmdiag
+    Palm intensity diagnostic plot for cluster process models
+    proposed by Tanaka, Ogata and Stoyan.
+
         CHANGES IN spatstat.model VERSION 3.0-2
 
 OVERVIEW

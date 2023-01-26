@@ -88,9 +88,11 @@
 \alias{kppmCLadap}
 \alias{labels.ppm}
 \alias{leverage.ppmInfluence}
+\alias{lines.objsurf}
 \alias{logi.engine}
 \alias{logLik.vblogit}
 \alias{LurkEngine}
+\alias{make.pspace}
 \alias{mapInterVars}
 \alias{Mayer}
 \alias{model.se.image}
@@ -119,6 +121,8 @@
 \alias{plot.minconfit}
 \alias{plot.parres}
 \alias{plot.qqppm}
+\alias{poisson.fits.better}
+\alias{PoissonCompareCalc}
 \alias{PoisSaddle}
 \alias{PoisSaddleArea}
 \alias{PoisSaddleGeyer}
@@ -239,7 +243,7 @@ check.separable(dmat, covname, isconstant, fatal)
 \method{coef}{summary.slrm}(object, \dots)
 \method{coef}{vblogit}(object, \dots) 
 condSimCox(object, nsim, \dots, window, n.cond, w.cond,
-           giveup, maxchunk, verbose, drop)
+           giveup, maxchunk, saveLambda, verbose, drop)
 damaged.ppm(object)
 data.mppm(x)
 deltasuffstat(model, \dots,
@@ -326,6 +330,7 @@ kppmCLadap(X, Xname, po, clusters, control, weightfun,
            startpar, globStrat)
 \method{labels}{ppm}(object, \dots)
 \method{leverage}{ppmInfluence}(model, \dots)
+\method{lines}{objsurf}(x, \dots, directed)
 logi.engine(Q, trend, interaction, \dots, 
             covariates, subsetexpr, clipwin,
             correction, rbord, covfunargs, allcovar, 
@@ -342,6 +347,11 @@ LurkEngine(object, type, cumulative, plot.sd,
            verbose, nx, splineargs,
            envelope, nsim, nrank, Xsim,
            internal, checklength)
+make.pspace(\dots, canonical, adjusted, trace, save, trajectory,
+             nhalfgrid, strict, penalised, penalty,
+             penal.args, tau, clusters, fitmethod,
+             flatness, C0factor, xval, xval.args,
+             debug, transfo)
 mapInterVars(object, subs, mom)
 Mayer(fi, exponent)
 model.se.image(fit, W, \dots, what, new.coef)
@@ -368,6 +378,7 @@ nndcumfun(X, \dots, r)
 no.trend.ppm(x)
 objsurfEngine(objfun, optpar, objargs,
               \dots, dotargs, objname,
+              new.objargs, parmap, 
               ngrid, xlim, ylim, ratio, verbose)
 optimConverged(x)
 optimStatus(x, call)
@@ -386,6 +397,8 @@ ploterodeimage(W, Z, \dots, Wcol, rangeZ, colsZ, do.plot)
 \method{plot}{qqppm}(x, \dots, limits=TRUE,
            monochrome=spatstat.options('monochrome'),
            limcol=if(monochrome) "black" else "red")
+poisson.fits.better(object)
+PoissonCompareCalc(object)
 PoisSaddle(beta, fi)
 PoisSaddleArea(beta, fi)
 PoisSaddleGeyer(beta, fi)
