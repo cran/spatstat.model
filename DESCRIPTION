@@ -1,6 +1,6 @@
 Package: spatstat.model
-Version: 3.1-2
-Date: 2023-01-26
+Version: 3.2-1
+Date: 2023-02-15
 Title: Parametric Statistical Modelling and Inference for the
         'spatstat' Family
 Authors@R: c(person("Adrian", "Baddeley", 
@@ -77,7 +77,7 @@ URL: http://spatstat.org/
 NeedsCompilation: yes
 ByteCompile: true
 BugReports: https://github.com/spatstat/spatstat.model/issues
-Packaged: 2023-01-26 07:33:25 UTC; adrian
+Packaged: 2023-02-15 03:37:55 UTC; adrian
 Author: Adrian Baddeley [aut, cre, cph]
     (<https://orcid.org/0000-0001-9499-8382>),
   Rolf Turner [aut, cph] (<https://orcid.org/0000-0001-5521-5218>),
@@ -103,4 +103,4 @@ Author: Adrian Baddeley [aut, cre, cph]
   Rasmus Plenge Waagepetersen [ctb],
   Hangsheng Wang [ctb]
 Repository: CRAN
-Date/Publication: 2023-01-26 09:30:02 UTC
+Date/Publication: 2023-02-15 21:30:02 UTC

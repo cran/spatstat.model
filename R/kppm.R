@@ -3,7 +3,7 @@
 #
 # kluster/kox point process models
 #
-# $Revision: 1.227 $ $Date: 2023/01/25 05:16:09 $
+# $Revision: 1.229 $ $Date: 2023/02/02 01:59:29 $
 #
 
 kppm <- function(X, ...) {
@@ -2223,7 +2223,7 @@ labels.kppm <- labels.dppm <- function(object, ...) {
   labels(object$po, ...)
 }
 
-update.kppm <- function(object, ..., evaluate=TRUE, envir=environment(terms(object))) {
+update.kppm <- update.dppm <- function(object, ..., evaluate=TRUE, envir=environment(terms(object))) {
   argh <- list(...)
   nama <- names(argh)
   callframe <- object$callframe
@@ -2351,14 +2351,19 @@ unitname.kppm <- unitname.dppm <- function(x) {
 }
 
 as.fv.kppm <- as.fv.dppm <- function(x) {
-  if(x$Fit$method == "mincon")
+  if(x$Fit$method == "mincon") 
     return(as.fv(x$Fit$mcfit))
-  gobs <- if(is.stationary(x)) pcf(x$X, correction="good") else pcfinhom(x$X, lambda=x, correction="good", update=FALSE)
+  gobs <- if(is.stationary(x)) {
+            pcf(x$X, correction="good")
+          } else {
+            pcfinhom(x$X, lambda=x, correction="good", update=FALSE)
+          }
+  gname <- attr(gobs, "fname")
   gfit <- (pcfmodel(x))(gobs$r)
   g <- bind.fv(gobs,
-               data.frame(fit=gfit), 
-               "%s[fit](r)",
-               "predicted %s for fitted model")
+               data.frame(fit=gfit),
+               labl = makefvlabel(fname=gname, sub="fit"),
+               desc = "predicted %s for fitted model")
   return(g)
 }
 
