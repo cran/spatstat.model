@@ -1,6 +1,6 @@
-17e5d9288aedaf69b8389c9c13e05bea *DESCRIPTION
+416edbbb5ea364b64b297fdfc8132756 *DESCRIPTION
 0a412d97425fd2ccccef320f6ed6e540 *NAMESPACE
-f06767dab044272de34f669191ee8b26 *NEWS
+989a87b33eb03303039b5ce2de93f712 *NEWS
 1cb9c3f0b25b431722e03617f05b1aac *R/First.R
 52520d3b1f07aa126ad8d36dd1b4a794 *R/Gcom.R
 1101d753c8f35af184bfa8ff36a64486 *R/Gres.R
@@ -34,8 +34,8 @@ bed9220a5fa073e11ec9d3b4a2029d84 *R/diagnoseppm.R
 deb500eb5d874c0415fb4416c8fe4948 *R/eem.R
 a816a44b139137b878fb2bcc08c5e4b8 *R/effectfun.R
 ca6a7874ed6bf1f3c388318cac2a3ac3 *R/enet.R
-51d435028ea4772bf7fc1721123adc73 *R/envelope.R
-7d4adf184cd4134d4fd6af3a07a3a1e6 *R/evidence.R
+bbc010d4e431f1441013b3c85f9aa6a4 *R/envelope.R
+50521f5521e7a9d7890430f29cd5019d *R/evidence.R
 47db1eb89c59ac77194b4e0f993ca57d *R/evidenceslrm.R
 c539b3e2b2f0419923d74f327368d15d *R/exactMPLEstrauss.R
 a59cbdaba5b58d814afbf184318d06e2 *R/fii.R
@@ -63,7 +63,7 @@ b1ffe51e9b04c84a86bb37e0a0b18e89 *R/interactions.R
 28efc8c34c3e37e4c4f8dd456549f069 *R/is.R
 ed338d0a0711cb1bf1f6ad603ecc966b *R/kppm.R
 b941d940d5c3010b7d6d58105ca42c49 *R/lennard.R
-88523256c9152799845829dcd9537c9a *R/leverage.R
+9caf08601603120f2f7b5184cff7b0f1 *R/leverage.R
 ef71edad32656c539a8828b26e598cf9 *R/logistic.R
 022dc30686800096e0f3ddedb9bee8ce *R/lurking.R
 fae8105e5c72c1e1e26e3dcd7e0cb083 *R/lurkmppm.R
@@ -100,7 +100,7 @@ eff91a3e3e11682e74644666801c4fc9 *R/polynom.R
 89972386d36e629c3e0fad9a89d1c6f4 *R/ppm.R
 e19e95e2c7dc166c79f27050ba577857 *R/ppmclass.R
 27c8724f9e862d6b920622c7eb0ae218 *R/ppmcovariates.R
-2ca09429f457048e87d05221365c4a47 *R/predict.ppm.R
+e1aba0074b87055e1dbb42e2de8b51e2 *R/predict.ppm.R
 b16a5912c2c3e79d2868d90d8cf4dd2c *R/predictmppm.R
 45c0c1f40e4ab8eb773e6b6da329918d *R/profilepl.R
 6296b94b8966088cbbba21abf4cf0826 *R/psst.R
@@ -116,7 +116,7 @@ ac55aea892428d316f5eff49f587bc63 *R/resid4plot.R
 8d47b2de2a8942a06591ad486b7ecc29 *R/residppm.R
 15f1ea6eff30e3b2b696ca6e9a3f5d4f *R/residuals.mppm.R
 33df985bd31bccf01ee715c7c4d30854 *R/response.R
-bc47c1ea4d7734ebeb27fa705dd8b8b2 *R/rhohat.R
+c4051f1bbb22ca45fcc9d714b8bc8482 *R/rhohat.R
 54dd7d6e9b1454ed9d5bedeaaa79f28d *R/rhohat.slrm.R
 65b0c7ab11362a091411e77794942cbf *R/rmh.ppm.R
 26afbaf959e8fafb6a773fecceb57b53 *R/rmhmodel.ppm.R
@@ -135,7 +135,7 @@ a77335ca398732a1c1ef4ee5fdea8e45 *R/summary.dppm.R
 d693b05f5b9f62d639735107f7ec4371 *R/summary.kppm.R
 8efb82a7e8b81c496030b406d795cd9e *R/summary.mppm.R
 22fa572d558fe64e539562831951a247 *R/summary.ppm.R
-211ea4e14077187b12dcd54466cdaf81 *R/sysdata.rda
+36df467c2ee75a25fe55992f95cf4613 *R/sysdata.rda
 376feb5fb96d24210e75a80c04b50c48 *R/traj.R
 d5d5535a1b90ca8cdd70be99d7a444c3 *R/triplet.family.R
 954f26a72a4d5e59c68dbe379bbffe26 *R/triplets.R
@@ -148,7 +148,7 @@ b97bc65916071ddab52ee712de6dd07a *R/vcov.mppm.R
 142665e8695c81652459b4cf5cd5e80a *R/zclustermodel.R
 61eff43100ed2a0cb74628e4d16ecbfc *R/zgibbsmodel.R
 f2d49fc8f50fef7f76bcb3fc7f34efb4 *inst/CITATION
-04922e58e9b0b3f469cf59f0e81f0c5a *inst/doc/packagesizes.txt
+35802ba78847d1b97c13e2e78a964ec2 *inst/doc/packagesizes.txt
 f5e2a9ab33f184325298589067db733c *man/AreaInter.Rd
 77fc2d941ecf582f33fa9ea263fe1cb0 *man/BadGey.Rd
 77010074c3c171dbafd1477064cb382c *man/Concom.Rd
@@ -204,10 +204,10 @@ d262ee9bc7bbec672cbe7492f6a48a3d *man/as.owin.ppm.Rd
 87caa8d70e11c26ea329d4becfaaa4fc *man/as.ppm.Rd
 173b6759c3663191b13fe876efa65b4c *man/auc.Rd
 3df7907e462038f9d2f410983c4be948 *man/bc.ppm.Rd
-ff059777a34807759e500ca2e27005e8 *man/berman.test.Rd
+524891b66cfb37eb55f60c0b688952d7 *man/berman.test.Rd
 eeb6d11aafdb2d9606a07d6b950461cc *man/cauchy.estK.Rd
 188e6aae6833a4e1ccaec2444b388a38 *man/cauchy.estpcf.Rd
-8e4c55f1b5cabcc0851ad4dae244cc67 *man/cdf.test.Rd
+667f6cc04f6340a16e0c99a51c5eced9 *man/cdf.test.Rd
 55367523e52d0ebf44f59660dcb4ca1c *man/cdf.test.mppm.Rd
 2e371442c54b15af5deaeb81badf3821 *man/closepaircounts.Rd
 ef2c1dffdd490033a64aee97eadfa701 *man/clusterfield.kppm.Rd
@@ -343,7 +343,7 @@ ec02e4c545bcc24367b6f183ca8261f7 *man/ppm.Rd
 b09507146205e71a0951ccb14a0a8e6b *man/predict.dppm.Rd
 d9c49bac00c2bba8e4a39634b2fc24c9 *man/predict.kppm.Rd
 31104a99b65b1bb03ac3c8b41ea2dec6 *man/predict.mppm.Rd
-e7a02a95611f8a12dd87e362fd25ecf3 *man/predict.ppm.Rd
+54fbc522a3440c334cce60f35cd9abcf *man/predict.ppm.Rd
 baf7a18910afda5c22e97a8b394f35ec *man/predict.rppm.Rd
 50919f5b3bae6bb7921705dc31f8d360 *man/predict.slrm.Rd
 0bf0e574c2e59c38aa75d2062fc41f3a *man/print.ppm.Rd
@@ -374,7 +374,7 @@ ff399f335cf2f573c0553b44dbe50572 *man/residuals.dppm.Rd
 8b78fdfb7fd19dbfd2473e2fa927622a *man/residuals.slrm.Rd
 9e9489c133f8ff62d47b8c132de5836e *man/response.Rd
 627fcde54f29940a08a9c1def1673bfc *man/rex.Rd
-ba318c71a2635fb817c218d0e625912b *man/rhohat.Rd
+8e4a9b82c714a50d3cf2ca58899c3680 *man/rhohat.Rd
 ad1a5993e70cad9b5720da73ff9192d4 *man/rmh.ppm.Rd
 b74fce12c103d1c45c14c78ebf3e4495 *man/rmhmodel.ppm.Rd
 4a83662de1ce0402451f866f2390938f *man/roc.Rd
@@ -385,7 +385,7 @@ dd24145691a063b12dc9884bfc5ef618 *man/simulate.kppm.Rd
 2cc959f26817dfd0b0d679f761d24aef *man/simulate.ppm.Rd
 4e92e07224d7111e24cadf4b88a12b6b *man/simulate.slrm.Rd
 09c1c038fcfa968e4aa1c7ce3c69cb67 *man/slrm.Rd
-7488258ee249c14b92ec2bad638d86d5 *man/spatstat.model-internal.Rd
+cc3b918a3d85474edc30667e0663e85b *man/spatstat.model-internal.Rd
 dcfa56b7229917cfc5b3800a524971bc *man/spatstat.model-package.Rd
 a85f30741ee936b330a7aba10aa312d9 *man/split.msr.Rd
 d126bcef08db458fab3c66a99a0af3f7 *man/subfits.Rd
