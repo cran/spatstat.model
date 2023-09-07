@@ -1,6 +1,6 @@
-416edbbb5ea364b64b297fdfc8132756 *DESCRIPTION
-0a412d97425fd2ccccef320f6ed6e540 *NAMESPACE
-989a87b33eb03303039b5ce2de93f712 *NEWS
+cd672fb7a3c76c0171669e786b6e0dc0 *DESCRIPTION
+7d2d9ddd815fc4a6f0f5888cd2d093f3 *NAMESPACE
+12aca7159cd1b324ef16635c3c93a0a1 *NEWS
 1cb9c3f0b25b431722e03617f05b1aac *R/First.R
 52520d3b1f07aa126ad8d36dd1b4a794 *R/Gcom.R
 1101d753c8f35af184bfa8ff36a64486 *R/Gres.R
@@ -12,14 +12,14 @@ b58a1f9410f53357b581a729e8e2fadb *R/aaaa.R
 b47091a376ad8650a9861d61003b3b46 *R/anova.mppm.R
 c95ffd3d971d61e1c60b038741fc1916 *R/anova.ppm.R
 995e5e87814f942ef22477532ffb1637 *R/areainter.R
-10fef63c0a40fb53440ace2f21a2ff14 *R/auc.R
+af17aae404df2b28967e96dcdfac3be1 *R/auc.R
 d4db6751867578ce0bcb408cb1284ec7 *R/augment.msr.R
 7270a0b79a1555829f4a7b6417d31d33 *R/badgey.R
 a0fae8aec838875945ad41c0a9703ba0 *R/bc.R
-f5a6ef05dfb50f89df3f8573dc456e39 *R/bermantest.R
+91ee29047e751be76c75241263cb1297 *R/bermantest.R
 95c7c072d25fae9c3d6b29e4a458685e *R/cdf.test.mppm.R
 4025fc98f7b2119ca60d331433366687 *R/cdftest.R
-1262d7ea3606d357851014ee102ae681 *R/clusterfunctions.R
+f305a9e38310d5f63f7109edee7f3bde *R/clusterfunctions.R
 26860886cc833bbc52fdec5e60eadc04 *R/compareFit.R
 a00723d970d1312c47c47dd2ada3ba37 *R/concom.R
 34c4f28d9bb553500e9e68fef3a95c2b *R/detPPF-class.R
@@ -34,7 +34,7 @@ bed9220a5fa073e11ec9d3b4a2029d84 *R/diagnoseppm.R
 deb500eb5d874c0415fb4416c8fe4948 *R/eem.R
 a816a44b139137b878fb2bcc08c5e4b8 *R/effectfun.R
 ca6a7874ed6bf1f3c388318cac2a3ac3 *R/enet.R
-bbc010d4e431f1441013b3c85f9aa6a4 *R/envelope.R
+b78783eea67bb9182187de0cd9d88ec3 *R/envelope.R
 50521f5521e7a9d7890430f29cd5019d *R/evidence.R
 47db1eb89c59ac77194b4e0f993ca57d *R/evidenceslrm.R
 c539b3e2b2f0419923d74f327368d15d *R/exactMPLEstrauss.R
@@ -71,7 +71,7 @@ ce9e429b1c61227fb4a0e2af05ec297f *R/makepspace.R
 d5be568db57d12fa3a2b4711a5b60b8d *R/measures.R
 bd6af9f08e0f086ce497f9c7aeb3cffd *R/mincontrast.R
 9649ecae60b096f55b55ac25acc84674 *R/model.depends.R
-4e6e720c365e56d93a0b0739ab06420a *R/mpl.R
+83a83501cf9f4c5d374c89116cbcca70 *R/mpl.R
 f6a9b3a9e70733bec7dc90e34e5c7250 *R/mppm.R
 1ac61059562f1d8dafb26f828841db0e *R/multihard.R
 21dee90242243823e6504b70762e3135 *R/multistrauss.R
@@ -108,7 +108,7 @@ b16a5912c2c3e79d2868d90d8cf4dd2c *R/predictmppm.R
 c77cd0f0a4b065242f7a0cbdb4dbd66f *R/psstG.R
 b2ee01d8a2825e539ff3794d971d0d75 *R/qqplotppm.R
 99aa240d18a1c29ee5156bc18017f63f *R/quadratmtest.R
-d0526ddb5c36ed3eb462fd131999195d *R/quadrattest.R
+53a3fa74d3aca679834aa16b39660bfc *R/quadrattest.R
 a0d7c692fc0f8f00655eb0df125ee134 *R/reach.R
 511b88658d51796d9a0daf71b44b9cb4 *R/reduceformula.R
 c7084f7d598252e624a777b5c9e2dc1c *R/relrisk.ppm.R
@@ -116,7 +116,7 @@ ac55aea892428d316f5eff49f587bc63 *R/resid4plot.R
 8d47b2de2a8942a06591ad486b7ecc29 *R/residppm.R
 15f1ea6eff30e3b2b696ca6e9a3f5d4f *R/residuals.mppm.R
 33df985bd31bccf01ee715c7c4d30854 *R/response.R
-c4051f1bbb22ca45fcc9d714b8bc8482 *R/rhohat.R
+a850e312ded923aab35c7b449790b192 *R/rhohat.R
 54dd7d6e9b1454ed9d5bedeaaa79f28d *R/rhohat.slrm.R
 65b0c7ab11362a091411e77794942cbf *R/rmh.ppm.R
 26afbaf959e8fafb6a773fecceb57b53 *R/rmhmodel.ppm.R
@@ -135,7 +135,7 @@ a77335ca398732a1c1ef4ee5fdea8e45 *R/summary.dppm.R
 d693b05f5b9f62d639735107f7ec4371 *R/summary.kppm.R
 8efb82a7e8b81c496030b406d795cd9e *R/summary.mppm.R
 22fa572d558fe64e539562831951a247 *R/summary.ppm.R
-36df467c2ee75a25fe55992f95cf4613 *R/sysdata.rda
+6d642b808b76ad02ca3fcedbe53a1d9c *R/sysdata.rda
 376feb5fb96d24210e75a80c04b50c48 *R/traj.R
 d5d5535a1b90ca8cdd70be99d7a444c3 *R/triplet.family.R
 954f26a72a4d5e59c68dbe379bbffe26 *R/triplets.R
@@ -148,7 +148,7 @@ b97bc65916071ddab52ee712de6dd07a *R/vcov.mppm.R
 142665e8695c81652459b4cf5cd5e80a *R/zclustermodel.R
 61eff43100ed2a0cb74628e4d16ecbfc *R/zgibbsmodel.R
 f2d49fc8f50fef7f76bcb3fc7f34efb4 *inst/CITATION
-35802ba78847d1b97c13e2e78a964ec2 *inst/doc/packagesizes.txt
+8debd71f162725ba17864d2de2c384eb *inst/doc/packagesizes.txt
 f5e2a9ab33f184325298589067db733c *man/AreaInter.Rd
 77fc2d941ecf582f33fa9ea263fe1cb0 *man/BadGey.Rd
 77010074c3c171dbafd1477064cb382c *man/Concom.Rd
@@ -385,7 +385,7 @@ dd24145691a063b12dc9884bfc5ef618 *man/simulate.kppm.Rd
 2cc959f26817dfd0b0d679f761d24aef *man/simulate.ppm.Rd
 4e92e07224d7111e24cadf4b88a12b6b *man/simulate.slrm.Rd
 09c1c038fcfa968e4aa1c7ce3c69cb67 *man/slrm.Rd
-cc3b918a3d85474edc30667e0663e85b *man/spatstat.model-internal.Rd
+bb7cb42edf49471a2709b8fe6c0cc49f *man/spatstat.model-internal.Rd
 dcfa56b7229917cfc5b3800a524971bc *man/spatstat.model-package.Rd
 a85f30741ee936b330a7aba10aa312d9 *man/split.msr.Rd
 d126bcef08db458fab3c66a99a0af3f7 *man/subfits.Rd
@@ -438,7 +438,7 @@ acdf88b1cfedbbb87d81bb727761decd *src/pairloop.h
 99f5dbf7fcf1569ec313bbd752bba2dc *tests/testsAtoC.R
 5a7777f0676fc205f414d79e5db8eac3 *tests/testsD.R
 12eb1116ec68c287655097abc45c8314 *tests/testsEtoF.R
-8e7d57ff907a0a766db34aaeb7a6d53a *tests/testsGtoJ.R
+de52edae9405c3c404d16d3b634238dd *tests/testsGtoJ.R
 829fad610569523af02cbeb63adfee59 *tests/testsK.R
 deb59c95affaf85791b00d9d5926289e *tests/testsL.R
 7551ded8d0522a088a7f5eb2217e6f3c *tests/testsM.R
