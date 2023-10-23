@@ -1,6 +1,6 @@
 Package: spatstat.model
-Version: 3.2-6
-Date: 2023-09-07
+Version: 3.2-8
+Date: 2023-10-23
 Title: Parametric Statistical Modelling and Inference for the
         'spatstat' Family
 Authors@R: c(person("Adrian", "Baddeley", 
@@ -9,7 +9,7 @@ Authors@R: c(person("Adrian", "Baddeley",
 		    comment = c(ORCID="0000-0001-9499-8382")),
 	     person("Rolf", "Turner", 
                     role = c("aut", "cph"),
- 	            email="r.turner@auckland.ac.nz",
+ 	            email="rolfturner@posteo.net",
 		    comment=c(ORCID="0000-0001-5521-5218")),
 	     person("Ege",   "Rubak", 
                     role = c("aut", "cph"),
@@ -57,15 +57,12 @@ Authors@R: c(person("Adrian", "Baddeley",
 	            role = "ctb"))
 Maintainer: Adrian Baddeley <Adrian.Baddeley@curtin.edu.au>
 Depends: R (>= 3.5.0), spatstat.data (>= 3.0), spatstat.geom (>=
-        3.2-1), spatstat.random (>= 3.1-5), spatstat.explore (>=
-        3.2-1), stats, graphics, grDevices, utils, methods, nlme, rpart
+        3.2-7), spatstat.random (>= 3.2-1), spatstat.explore (>=
+        3.2-5), stats, graphics, grDevices, utils, methods, nlme, rpart
 Imports: spatstat.utils (>= 3.0-3), spatstat.sparse (>= 3.0), mgcv,
         Matrix, abind, tensor, goftest (>= 1.2-2)
-Suggests: sm, maptools (>= 0.9-9), gsl, locfit, spatial, RandomFields
-        (>= 3.1.24.1), RandomFieldsUtils(>= 0.3.3.1), fftwtools (>=
-        0.9-8), nleqslv, glmnet, spatstat.linnet (>= 3.1), spatstat (>=
-        3.0)
-Additional_repositories: https://spatstat.r-universe.dev
+Suggests: sm, gsl, locfit, spatial, fftwtools (>= 0.9-8), nleqslv,
+        glmnet, spatstat.linnet (>= 3.1), spatstat (>= 3.0)
 Description: Functionality for parametric statistical modelling and inference for spatial data,
 	     mainly spatial point patterns, in the 'spatstat' family of packages.
 	     (Excludes analysis of spatial data on a linear network,
@@ -77,7 +74,7 @@ URL: http://spatstat.org/
 NeedsCompilation: yes
 ByteCompile: true
 BugReports: https://github.com/spatstat/spatstat.model/issues
-Packaged: 2023-09-07 04:47:28 UTC; adrian
+Packaged: 2023-10-23 00:24:50 UTC; adrian
 Author: Adrian Baddeley [aut, cre, cph]
     (<https://orcid.org/0000-0001-9499-8382>),
   Rolf Turner [aut, cph] (<https://orcid.org/0000-0001-5521-5218>),
@@ -103,4 +100,4 @@ Author: Adrian Baddeley [aut, cre, cph]
   Rasmus Plenge Waagepetersen [ctb],
   Hangsheng Wang [ctb]
 Repository: CRAN
-Date/Publication: 2023-09-07 07:20:02 UTC
+Date/Publication: 2023-10-23 08:10:02 UTC
