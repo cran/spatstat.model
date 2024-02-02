@@ -63,8 +63,9 @@ reset.spatstat.options()
 #'                    relrisk(), Smooth()
 #'                    and inhomogeneous summary functions
 #'                    and idw, adaptive.density, intensity
+#'                    and SpatialMedian, SpatialQuantile
 #'
-#'  $Revision: 1.62 $  $Date: 2022/05/22 11:14:51 $
+#'  $Revision: 1.67 $  $Date: 2024/01/29 07:07:16 $
 #'
 
 if(!FULLTEST)

@@ -4,7 +4,7 @@
 #	Class 'ppm' representing fitted point process models.
 #
 #
-#	$Revision: 2.153 $	$Date: 2023/02/02 00:16:02 $
+#	$Revision: 2.156 $	$Date: 2024/01/25 09:17:39 $
 #
 #       An object of class 'ppm' contains the following:
 #
@@ -190,7 +190,7 @@ function(x, ...,
       print(cose, digits=digits)
     } else if(do.SE) {
       # standard error calculation failed
-      splat("Standard errors unavailable; variance-covariance matrix is singular")
+      splat("Standard errors unavailable; Fisher information matrix is singular")
     } else if(!force.no.SE) {
       # standard error was voluntarily omitted
       if(waxlyrical('space', terselevel))
@@ -291,11 +291,16 @@ coef.ppm <- function(object, ...) {
   object$coef
 }
 
-hasglmfit <- function(object) {
-  return(!is.null(object$internal$glmfit))
+# extract internal fit
+
+getglmdata.ppm <- function(object, ..., drop=FALSE) {
+  verifyclass(object, "ppm")
+  gd <- object$internal$glmdata
+  if(!drop || is.null(gd)) return(gd)
+  return(gd[getglmsubset(object), , drop=FALSE])
 }
 
-getglmfit <- function(object) {
+getglmfit.ppm <- function(object, ...) {
   verifyclass(object, "ppm")
   glmfit <- object$internal$glmfit
   if(is.null(glmfit))
@@ -305,18 +310,19 @@ getglmfit <- function(object) {
   return(glmfit)
 }
 
-getglmdata <- function(object, drop=FALSE) {
+getglmsubset.ppm <- function(object, ...) {
   verifyclass(object, "ppm")
-  gd <- object$internal$glmdata
-  if(!drop || is.null(gd)) return(gd)
-  return(gd[getglmsubset(object), , drop=FALSE])
-}
-
-getglmsubset <- function(object) {
   gd <- object$internal$glmdata
   if(is.null(gd)) return(NULL)
   if(object$method=="logi") gd$.logi.ok else gd$.mpl.SUBSET
 }
+
+hasglmfit.ppm <- function(object) {
+  verifyclass(object, "ppm")
+  return(!is.null(object$internal$glmfit))
+}
+
+## internal, not exposed to user
 
 getppmdatasubset <- function(object) {
   ## Equivalent to getglmsubset(object)[is.data(quad.ppm(object))]
