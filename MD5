@@ -1,6 +1,6 @@
-fe5d8ba060c5036eaff1c09649465e01 *DESCRIPTION
+24a1f7db6fd0852363996d5654f45861 *DESCRIPTION
 be312c3e6aba86ba442594fe4e5934a8 *NAMESPACE
-333975991c4d0deed8f0986a617494b8 *NEWS
+670c3d7570be817dae15496f6566e5d7 *NEWS
 1cb9c3f0b25b431722e03617f05b1aac *R/First.R
 52520d3b1f07aa126ad8d36dd1b4a794 *R/Gcom.R
 1101d753c8f35af184bfa8ff36a64486 *R/Gres.R
@@ -101,7 +101,7 @@ eff91a3e3e11682e74644666801c4fc9 *R/polynom.R
 89972386d36e629c3e0fad9a89d1c6f4 *R/ppm.R
 f55b65eddc266addf18c4d56b199bd7e *R/ppmclass.R
 27c8724f9e862d6b920622c7eb0ae218 *R/ppmcovariates.R
-e1aba0074b87055e1dbb42e2de8b51e2 *R/predict.ppm.R
+0b67422a5a36bab43e4d7fedbd29c560 *R/predict.ppm.R
 b16a5912c2c3e79d2868d90d8cf4dd2c *R/predictmppm.R
 45c0c1f40e4ab8eb773e6b6da329918d *R/profilepl.R
 6296b94b8966088cbbba21abf4cf0826 *R/psst.R
@@ -136,7 +136,7 @@ a77335ca398732a1c1ef4ee5fdea8e45 *R/summary.dppm.R
 d693b05f5b9f62d639735107f7ec4371 *R/summary.kppm.R
 8efb82a7e8b81c496030b406d795cd9e *R/summary.mppm.R
 22fa572d558fe64e539562831951a247 *R/summary.ppm.R
-660edba70b62333d61ccb07f88135d4f *R/sysdata.rda
+deb302cb93a0ce5fe2691f1b2a1c9330 *R/sysdata.rda
 376feb5fb96d24210e75a80c04b50c48 *R/traj.R
 d5d5535a1b90ca8cdd70be99d7a444c3 *R/triplet.family.R
 954f26a72a4d5e59c68dbe379bbffe26 *R/triplets.R
@@ -149,7 +149,7 @@ fc0caa69b812d45b9c49922b23106de0 *R/vcov.ppm.R
 323f7eef768ac040328b5dfb24554a73 *R/zclustermodel.R
 61eff43100ed2a0cb74628e4d16ecbfc *R/zgibbsmodel.R
 f2d49fc8f50fef7f76bcb3fc7f34efb4 *inst/CITATION
-ec1684cc717debd6f906f8ed8f69defe *inst/doc/packagesizes.txt
+2a4c5562afce1e0328b1f3f1d2c37314 *inst/doc/packagesizes.txt
 f5e2a9ab33f184325298589067db733c *man/AreaInter.Rd
 77fc2d941ecf582f33fa9ea263fe1cb0 *man/BadGey.Rd
 77010074c3c171dbafd1477064cb382c *man/Concom.Rd
@@ -440,7 +440,7 @@ acdf88b1cfedbbb87d81bb727761decd *src/pairloop.h
 53050a0f62a762920e1d25dfac2d3175 *tests/testsD.R
 d22d8d3906f31845f160b758faa07d52 *tests/testsEtoF.R
 de52edae9405c3c404d16d3b634238dd *tests/testsGtoJ.R
-377845a4d792a122e0b5dbcd0c792789 *tests/testsK.R
+7aa22df9b4715acbae58872d58e402db *tests/testsK.R
 deb59c95affaf85791b00d9d5926289e *tests/testsL.R
 7551ded8d0522a088a7f5eb2217e6f3c *tests/testsM.R
 afcdf2310713040d0bebe1eb36b28eef *tests/testsNtoO.R
