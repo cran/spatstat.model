@@ -1,4 +1,49 @@
 
+        CHANGES IN spatstat.model VERSION 3.3-1
+
+OVERVIEW
+
+    o Internal changes to satisfy CRAN package checker.
+    
+
+        CHANGES IN spatstat.model VERSION 3.3-0
+
+OVERVIEW
+
+    o Package now depends on 'spatstat.univar'.
+    
+    o Easier control over quadrature schemes.
+
+    o More options in fitted.slrm
+    
+    o Bug fix in predict.ppm.
+
+    o Internal improvements.
+
+PACKAGE DEPENDENCE
+
+    o spatstat.model now depends on the new package 'spatstat.univar'.
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o ppm.ppp
+    New argument 'quad.args' is a list of arguments passed to 'quadscheme'
+    to control the construction of the quadrature scheme.
+
+    o fitted.slrm
+    New argument 'type' allows calculation of fitted probabilities, intensities
+    or link function values.
+
+    o fitted.slrm
+    New arguments 'dataonly' and 'leaveoneout' allow calculation of fitted
+    values at the data points only, using leave-one-out calculation if desired.
+
+BUG FIXES
+
+    o predict.ppm
+    Argument 'eps' was ignored in many cases.
+    Fixed.
+
         CHANGES IN spatstat.model VERSION 3.2-11
 
 OVERVIEW

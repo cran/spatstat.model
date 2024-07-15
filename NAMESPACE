@@ -3,7 +3,8 @@
 ## ................  Import packages ..................
 
 import(stats,graphics,grDevices,utils,methods)
-import(spatstat.utils,spatstat.data,spatstat.sparse,
+import(spatstat.utils,spatstat.data,
+       spatstat.univar,spatstat.sparse,
        spatstat.geom,spatstat.random,spatstat.explore)
 import(goftest)
 import(Matrix,nlme,rpart)
@@ -600,6 +601,7 @@ export("residuals.rppm")
 export("residuals.slrm")
 export("response")
 export("response.dppm")
+export("response.exactppm")
 export("response.glm")
 export("response.kppm")
 export("response.lm")
@@ -1080,6 +1082,7 @@ S3method("residuals", "mppm")
   S3method("residuals", "rppm")
   S3method("residuals", "slrm")
 S3method("response", "dppm")
+S3method("response", "exactppm")
 S3method("response", "glm")
 S3method("response", "kppm")
 S3method("response", "lm")
