@@ -1,6 +1,6 @@
-e42a453619dce105523c30343e68d155 *DESCRIPTION
+f50dece85953de34827658abb3e6eeb4 *DESCRIPTION
 b2014cf0b6014421e779c18d5c663eab *NAMESPACE
-4aca4c38ff97e9e4f878672abfe38893 *NEWS
+b706df1a99928e7967daa44c2a06ee9f *NEWS
 1cb9c3f0b25b431722e03617f05b1aac *R/First.R
 52520d3b1f07aa126ad8d36dd1b4a794 *R/Gcom.R
 1101d753c8f35af184bfa8ff36a64486 *R/Gres.R
@@ -86,7 +86,7 @@ f48d82982ecb34d893bfce2ef96a8a09 *R/ordthresh.R
 2938ce29be6f87913b542c40abf23b76 *R/pairsat.family.R
 b9643bbc4c4e7a336fcc535afc002c58 *R/pairwise.R
 827bdad041413785df5e4de9b294ab61 *R/pairwise.family.R
-b2b283260e932005e262006bc8945b36 *R/palmdiagnose.R
+f81fb2e2aafb0e048789ae2aebe8d08a *R/palmdiagnose.R
 4e50e2c71c4289770e0ce270e06146bf *R/panysib.R
 7e219c0e44487ff76d3c06bb86a48984 *R/parameters.R
 10a2ecf76550b1e50adc72a515f770aa *R/parres.R
@@ -149,8 +149,8 @@ fc0caa69b812d45b9c49922b23106de0 *R/vcov.ppm.R
 323f7eef768ac040328b5dfb24554a73 *R/zclustermodel.R
 61eff43100ed2a0cb74628e4d16ecbfc *R/zgibbsmodel.R
 f2d49fc8f50fef7f76bcb3fc7f34efb4 *inst/CITATION
-eded87d03f105ad819a1e0f58e61eceb *inst/doc/packagesizes.txt
-eded87d03f105ad819a1e0f58e61eceb *inst/info/packagesizes.txt
+41ae41bfdc178e161c6119ffe2c5c1fa *inst/doc/packagesizes.txt
+41ae41bfdc178e161c6119ffe2c5c1fa *inst/info/packagesizes.txt
 aa5621552412a0eb5a46b14684c19ede *man/AreaInter.Rd
 77fc2d941ecf582f33fa9ea263fe1cb0 *man/BadGey.Rd
 77010074c3c171dbafd1477064cb382c *man/Concom.Rd
@@ -388,7 +388,7 @@ aab6534dbef6aecfd5b190959eb63926 *man/simulate.ppm.Rd
 f34d48d72ecd6ae6c90f5b9a83f3994f *man/simulate.slrm.Rd
 0e5c8982bdd57076f6c72db71514ff8f *man/slrm.Rd
 ff7c51fa42015d579002e7893e48623e *man/spatstat.model-internal.Rd
-8e2efc01637aedf6b486e92d333e2646 *man/spatstat.model-package.Rd
+a944e698d7dde3b84377aa790e383ad3 *man/spatstat.model-package.Rd
 5e4982aacbfd1921ef2d1b2c8a87e67d *man/split.msr.Rd
 d126bcef08db458fab3c66a99a0af3f7 *man/subfits.Rd
 a733bb706605ce612aca29b0401cd3fe *man/suffstat.Rd
