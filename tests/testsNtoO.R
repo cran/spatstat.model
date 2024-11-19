@@ -17,19 +17,28 @@ cat(paste("--------- Executing",
 #
 # Testing the response to the presence of NA's in covariates
 #
-# $Revision: 1.9 $ $Date: 2023/11/05 01:45:36 $
+# $Revision: 1.10 $ $Date: 2024/09/30 23:13:54 $
 
 if(FULLTEST) {
 local({
   X <- runifpoint(42)
   Y <- as.im(function(x,y) { x+y }, owin())
   Y[owin(c(0.2,0.4),c(0.2,0.4))] <- NA
-  # fit model: should produce a warning but no failure
-  misfit <- ppm(X ~Y, covariates=list(Y=Y))
-  # prediction 
+  ## ..... ppm ......................................
+  ## fit model: should produce a warning but no failure
+  misfit <- ppm(X ~ Y)
+  ## prediction 
   Z <- predict(misfit, type="trend", se=TRUE)
-  # covariance matrix: all should be silent
+  ## canonical covariates
+  M <- model.images(misfit)
+  ## covariance matrix: all should be silent
   v <- vcov(misfit)
   ss <- vcov(misfit, what="internals")
+  ## ..... kppm ......................................
+  ## should produce warnings but no failures
+  misfit <- kppm(X ~Y)
+  V <- predict(misfit, type="trend", se=TRUE)
+  M <- model.images(misfit)
+  refit <- improve.kppm(misfit, dimyx=20)
 })
 }

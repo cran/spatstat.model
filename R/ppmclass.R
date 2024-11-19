@@ -4,7 +4,7 @@
 #	Class 'ppm' representing fitted point process models.
 #
 #
-#	$Revision: 2.156 $	$Date: 2024/01/25 09:17:39 $
+#	$Revision: 2.159 $	$Date: 2024/10/06 10:32:04 $
 #
 #       An object of class 'ppm' contains the following:
 #
@@ -802,7 +802,10 @@ PPMmodelmatrix <- function(object,
                            data = NULL, 
                            ...,
                            subset, Q=NULL, keepNA=TRUE, irregular=FALSE,
-                           splitInf=FALSE) {
+                           splitInf=FALSE,
+                           eps=NULL, dimyx=NULL, xy=NULL, rule.eps=NULL) {
+  ## trap pixel resolution arguments - not used 
+  dont.complain.about(eps, dimyx, xy, rule.eps)
   # handles ppm and ippm			      
   data.given <- !is.null(data)
   irregular <- irregular && inherits(object, "ippm") && !is.null(object$iScore)
@@ -821,8 +824,8 @@ PPMmodelmatrix <- function(object,
     bt <- do.call(bt.frame,
                   c(list(Q), object[needed], list(splitInf=splitInf)))
     forbid <- bt$forbid
-    ## compute model matrix
-    mf <- model.frame(bt$fmla, bt$glmdata, ...)
+    ## compute model matrix (including NA's if present)
+    mf <- model.frame(bt$fmla, bt$glmdata, ..., na.action=NULL)
     mm <- model.matrix(bt$fmla, mf, ...)
     ass <- attr(mm, "assign")
     if(irregular) {
@@ -966,9 +969,9 @@ model.images.ppm <- function(object, W=as.owin(object), ...) {
   X <- data.ppm(object)
 #  irregular <- resolve.1.default(list(irregular=FALSE), list(...))
   ## make a quadscheme with a dummy point at every pixel
-  Q <- pixelquad(X, W)
+  Q <- pixelquad(X, W, ...)  # recognises dimyx etc
   ## compute model matrix
-  mm <- model.matrix(object, Q=Q, ...)
+  mm <- model.matrix(object, Q=Q, ...) # ignores dimyx etc
   ## retain only the entries for dummy points (pixels)
   mm <- mm[!is.data(Q), , drop=FALSE]
   mm <- as.data.frame(mm)

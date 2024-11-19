@@ -1,4 +1,27 @@
 
+        CHANGES IN spatstat.model VERSION 3.3-3
+
+OVERVIEW
+
+    o Bug fixes and minor improvements.
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o model.images.ppm
+    Now recognises arguments passed to 'as.mask'
+    to control the pixel raster for the images.
+    
+BUG FIXES
+
+    o improve.kppm
+    Crashed if NA's were present in the covariate values.
+    Fixed.
+
+    o model.matrix.ppm
+    Crashed with a message about 'logical index too long',
+    if NA's were present in the covariate values.
+    Fixed.
+
         CHANGES IN spatstat.model VERSION 3.3-2
 
 OVERVIEW
