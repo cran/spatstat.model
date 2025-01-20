@@ -1,6 +1,6 @@
-d6491c123d82715b6327682ac3acd4a6 *DESCRIPTION
+4337ef63089077ce3a4a86f13c71c07f *DESCRIPTION
 b2014cf0b6014421e779c18d5c663eab *NAMESPACE
-499a40168bbf5b74bc388163e2c2b3f1 *NEWS
+1e7fa497b543b9261ad2cd131915457e *NEWS
 1cb9c3f0b25b431722e03617f05b1aac *R/First.R
 52520d3b1f07aa126ad8d36dd1b4a794 *R/Gcom.R
 1101d753c8f35af184bfa8ff36a64486 *R/Gres.R
@@ -72,7 +72,7 @@ ce9e429b1c61227fb4a0e2af05ec297f *R/makepspace.R
 f9fd754cb5c55209bfb62fe7c62cfb7a *R/measures.R
 bd6af9f08e0f086ce497f9c7aeb3cffd *R/mincontrast.R
 9649ecae60b096f55b55ac25acc84674 *R/model.depends.R
-1c24c1f3444c39e6cec8d6f4b9172b6f *R/mpl.R
+042cb6654646214f1b6b6bc8527aad80 *R/mpl.R
 fffe80d229c5a07a476cc78c33da6c31 *R/mppm.R
 1ac61059562f1d8dafb26f828841db0e *R/multihard.R
 21dee90242243823e6504b70762e3135 *R/multistrauss.R
@@ -149,8 +149,8 @@ fc0caa69b812d45b9c49922b23106de0 *R/vcov.ppm.R
 323f7eef768ac040328b5dfb24554a73 *R/zclustermodel.R
 61eff43100ed2a0cb74628e4d16ecbfc *R/zgibbsmodel.R
 f2d49fc8f50fef7f76bcb3fc7f34efb4 *inst/CITATION
-065a1abfc182fcae53ab59d4b470ff19 *inst/doc/packagesizes.txt
-065a1abfc182fcae53ab59d4b470ff19 *inst/info/packagesizes.txt
+9da2aabd1ec7fd62a4e92856f004e7b7 *inst/doc/packagesizes.txt
+9da2aabd1ec7fd62a4e92856f004e7b7 *inst/info/packagesizes.txt
 aa5621552412a0eb5a46b14684c19ede *man/AreaInter.Rd
 77fc2d941ecf582f33fa9ea263fe1cb0 *man/BadGey.Rd
 77010074c3c171dbafd1477064cb382c *man/Concom.Rd
