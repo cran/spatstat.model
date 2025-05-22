@@ -13,11 +13,11 @@
 \alias{bt.frame}
 \alias{cannot.update}
 \alias{check.separable}
+\alias{clusterkernel.zclustermodel}
 \alias{coef.summary.kppm}
 \alias{coef.summary.ppm}
 \alias{coef.summary.slrm}
 \alias{coef.vblogit} 
-\alias{condSimCox}
 \alias{damaged.ppm}
 \alias{data.mppm}
 \alias{deltasuffstat}
@@ -94,7 +94,9 @@
 \alias{is.multitype.slrm}    
 \alias{is.poisson.mppm}
 \alias{is.poisson.rppm}
+\alias{is.poissonclusterprocess.clusterprocess}
 \alias{Kpcf.kppm}
+\alias{Kmodel.clusterprocess}
 \alias{Kmodel.slrm}
 \alias{killinteraction}
 \alias{kppmComLik}
@@ -129,6 +131,7 @@
 \alias{parameters.detpointprocfamily}
 \alias{PairPotentialType}
 \alias{partialModelMatrix}
+\alias{pcfmodel.clusterprocess}
 \alias{pcfmodel.slrm}
 \alias{ploterodewin}
 \alias{ploterodeimage}
@@ -256,12 +259,11 @@ bt.frame(Q, trend, interaction, \dots, covariates,
 bigvaluerule(objfun, objargs, startpar, \dots)
 cannot.update(\dots)
 check.separable(dmat, covname, isconstant, fatal)
+\method{clusterkernel}{zclustermodel}(model, \dots)
 \method{coef}{summary.kppm}(object, \dots)
 \method{coef}{summary.ppm}(object, \dots)
 \method{coef}{summary.slrm}(object, \dots)
 \method{coef}{vblogit}(object, \dots) 
-condSimCox(object, nsim, \dots, window, n.cond, w.cond,
-           giveup, maxchunk, saveLambda, verbose, drop)
 damaged.ppm(object)
 data.mppm(x)
 deltasuffstat(model, \dots,
@@ -346,7 +348,9 @@ is.mppm(x)
 \method{is.multitype}{slrm}(X, \dots)
 \method{is.poisson}{mppm}(x)
 \method{is.poisson}{rppm}(x)
+\method{is.poissonclusterprocess}{clusterprocess}(model)
 Kpcf.kppm(model, what)
+\method{Kmodel}{clusterprocess}(model, \dots)
 \method{Kmodel}{slrm}(model, \dots)
 killinteraction(model)
 kppmComLik(X, Xname, po, clusters, control, stabilize, weightfun, rmax,
@@ -419,6 +423,7 @@ oversize.quad(Q, \dots, nU, nX, p)
 PairPotentialType(pairpot)
 \method{parameters}{detpointprocfamily}(model, \dots)
 partialModelMatrix(X,D,model,callstring,\dots)
+\method{pcfmodel}{clusterprocess}(model, \dots)
 \method{pcfmodel}{slrm}(model, \dots)
 ploterodewin(W1, W2, col.edge, col.inside, do.plot, \dots)
 ploterodeimage(W, Z, \dots, Wcol, rangeZ, colsZ, do.plot)

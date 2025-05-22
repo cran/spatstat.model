@@ -1,6 +1,6 @@
-e7ab2322377bc4ac7d89d94c351643c7 *DESCRIPTION
-b2014cf0b6014421e779c18d5c663eab *NAMESPACE
-d205c89aafa9ff2348aa64035b10b272 *NEWS
+3f95f0ec8fd1549828b3a34c6582c18c *DESCRIPTION
+4c2359313ab0da3e29b6e0cdbc63bec9 *NAMESPACE
+e7cb095abd11c5a8dbf79f0c5c1a8923 *NEWS
 1cb9c3f0b25b431722e03617f05b1aac *R/First.R
 52520d3b1f07aa126ad8d36dd1b4a794 *R/Gcom.R
 1101d753c8f35af184bfa8ff36a64486 *R/Gres.R
@@ -20,6 +20,7 @@ a0fae8aec838875945ad41c0a9703ba0 *R/bc.R
 95c7c072d25fae9c3d6b29e4a458685e *R/cdf.test.mppm.R
 4025fc98f7b2119ca60d331433366687 *R/cdftest.R
 f305a9e38310d5f63f7109edee7f3bde *R/clusterfunctions.R
+3b0475b5cbc401703274ee46144f2f49 *R/clusterprocess.R
 26860886cc833bbc52fdec5e60eadc04 *R/compareFit.R
 a00723d970d1312c47c47dd2ada3ba37 *R/concom.R
 34c4f28d9bb553500e9e68fef3a95c2b *R/detPPF-class.R
@@ -125,7 +126,7 @@ a850e312ded923aab35c7b449790b192 *R/rhohat.R
 d6c9955f67b6ba632995629e59fcbea3 *R/satpiece.R
 06ef1d6ad3f5b348e3c584f4e5411644 *R/saturated.R
 2ba0f9045410335518d031b3e17c34db *R/simulate.detPPF.R
-93e113811d672b4dba8df74e9a5fff31 *R/simulatekppm.R
+9ee6750dd1592f051f1bfb8d8224cf2f *R/simulatekppm.R
 8a028908d5682f15c774d663cf634dac *R/slrm.R
 a7516b3caac186b37354494ae04215a1 *R/softcore.R
 dbf90bf31822af309792488892888558 *R/strauss.R
@@ -136,7 +137,7 @@ a77335ca398732a1c1ef4ee5fdea8e45 *R/summary.dppm.R
 d693b05f5b9f62d639735107f7ec4371 *R/summary.kppm.R
 8efb82a7e8b81c496030b406d795cd9e *R/summary.mppm.R
 22fa572d558fe64e539562831951a247 *R/summary.ppm.R
-4a3352141abfa80faee327b50d627e99 *R/sysdata.rda
+95c47e38a965c33ae5d5df2b206824a4 *R/sysdata.rda
 376feb5fb96d24210e75a80c04b50c48 *R/traj.R
 d5d5535a1b90ca8cdd70be99d7a444c3 *R/triplet.family.R
 954f26a72a4d5e59c68dbe379bbffe26 *R/triplets.R
@@ -146,11 +147,11 @@ d5d5535a1b90ca8cdd70be99d7a444c3 *R/triplet.family.R
 e3260a100b0bfe656a7ea33ce4743f87 *R/vcov.kppm.R
 b97bc65916071ddab52ee712de6dd07a *R/vcov.mppm.R
 fc0caa69b812d45b9c49922b23106de0 *R/vcov.ppm.R
-323f7eef768ac040328b5dfb24554a73 *R/zclustermodel.R
+696f4e861eb94710978efe804ff3c51b *R/zclustermodel.R
 61eff43100ed2a0cb74628e4d16ecbfc *R/zgibbsmodel.R
 f2d49fc8f50fef7f76bcb3fc7f34efb4 *inst/CITATION
-3c69fb9ec2f77bd27cfa070dc060e604 *inst/doc/packagesizes.txt
-3c69fb9ec2f77bd27cfa070dc060e604 *inst/info/packagesizes.txt
+c9e1b7a0b3d8a4f5f3c9e4337c90d4b3 *inst/doc/packagesizes.txt
+c9e1b7a0b3d8a4f5f3c9e4337c90d4b3 *inst/info/packagesizes.txt
 aa5621552412a0eb5a46b14684c19ede *man/AreaInter.Rd
 77fc2d941ecf582f33fa9ea263fe1cb0 *man/BadGey.Rd
 77010074c3c171dbafd1477064cb382c *man/Concom.Rd
@@ -304,7 +305,7 @@ b56dda71cbc4fcff91743c302b8bd0ba *man/methods.leverage.ppm.Rd
 96c4e8083fa5f17ae4ecbf665fdf4241 *man/methods.objsurf.Rd
 5764ea8447559f139adb0860787ca3f7 *man/methods.slrm.Rd
 a136561728d59a318407e851e99d62b5 *man/methods.traj.Rd
-cc83f970d148b8a2178e7c7b649207c5 *man/methods.zclustermodel.Rd
+906023e1ed01bbc4d7d132a5b0e171b1 *man/methods.zclustermodel.Rd
 2b48fe35d986e94632f1e727b4b68985 *man/methods.zgibbsmodel.Rd
 3fecceca439a85422da42e0b9017cb3a *man/mincontrast.Rd
 bc47733e01454abe17ed482062b87989 *man/model.depends.Rd
@@ -349,7 +350,7 @@ a7123137cb84deb1626991964dd624bd *man/predict.mppm.Rd
 baf7a18910afda5c22e97a8b394f35ec *man/predict.rppm.Rd
 c18ca3909d48d4b6533329840bcaf84a *man/predict.slrm.Rd
 0bf0e574c2e59c38aa75d2062fc41f3a *man/print.ppm.Rd
-61098a851f6d3a52f8b1d723f65c0218 *man/profilepl.Rd
+bf5342c177e0896308c484694e3b9a67 *man/profilepl.Rd
 a8d0bb1cb4832789478c2fd9fdff494c *man/prune.rppm.Rd
 b59f5f0d6b7edb61d6a0c5b1cf51da23 *man/pseudoR2.Rd
 147d6cacaa5001a88042a6fcc164f4a7 *man/psib.Rd
@@ -387,7 +388,7 @@ ed170353e63556f1862094d3461b447d *man/simulate.kppm.Rd
 aab6534dbef6aecfd5b190959eb63926 *man/simulate.ppm.Rd
 f34d48d72ecd6ae6c90f5b9a83f3994f *man/simulate.slrm.Rd
 0e5c8982bdd57076f6c72db71514ff8f *man/slrm.Rd
-68a35f5479b229ec91ab57c13bc6cde0 *man/spatstat.model-internal.Rd
+c3bd8bbc81b8239ad0e38bf43b2fc8b5 *man/spatstat.model-internal.Rd
 a944e698d7dde3b84377aa790e383ad3 *man/spatstat.model-package.Rd
 5e4982aacbfd1921ef2d1b2c8a87e67d *man/split.msr.Rd
 d126bcef08db458fab3c66a99a0af3f7 *man/subfits.Rd

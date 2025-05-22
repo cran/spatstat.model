@@ -1,4 +1,23 @@
 
+        CHANGES IN spatstat.model VERSION 3.3-6
+
+OVERVIEW
+
+    o Simulation of 'zclustermodel' objects.
+    
+    o Documentation improvements and bug fixes.
+    
+NEW FUNCTIONS
+
+    o simulate.zclustermodel
+    Method for simulating objects of class 'zclustermodel'.
+    
+BUG FIXES
+
+    o intensity.zclustermodel
+    Always returned the value zero.
+    Fixed.
+
         CHANGES IN spatstat.model VERSION 3.3-5
 
 OVERVIEW

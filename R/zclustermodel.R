@@ -3,7 +3,7 @@
 #'
 #' Experimental
 #' 
-#'   $Revision: 1.11 $ $Date: 2023/09/11 04:13:58 $
+#'   $Revision: 1.13 $ $Date: 2025/05/16 07:14:43 $
 #'
 
 zclustermodel <- function(name="Thomas", ..., mu, kappa, scale) {
@@ -11,6 +11,7 @@ zclustermodel <- function(name="Thomas", ..., mu, kappa, scale) {
   if(missing(mu)) stop("The mean cluster size mu must be given")
   if(missing(scale)) stop("The cluster scale must be given")
   rules <- spatstatClusterModelInfo(name)
+  if(!(rules$isPCP)) stop("zclustermodel only supports Neyman-Scott processes")
   par.std <- c(kappa=kappa, scale=scale)
   par.std <- rules$checkpar(par.std, native=FALSE)
   par.idio <- rules$checkpar(par.std, native=TRUE)
@@ -62,28 +63,8 @@ print.zclustermodel <- local({
 
 
                              
-pcfmodel.zclustermodel <- function(model, ...) {
-  p <- model$rules$pcf
-  mpar <- model$par.idio
-  other <- model$other
-  f <- function(r) {
-    as.numeric(do.call(p, c(list(par=mpar, rvals=r), other)))
-  }
-  return(f)
-}
-
-Kmodel.zclustermodel <- function(model, ...) {
-  K <- model$rules$K
-  mpar <- model$par.idio
-  other <- model$other
-  f <- function(r) {
-    as.numeric(do.call(K, c(list(par=mpar, rvals=r), other)))
-  }
-  return(f)
-}
-
 intensity.zclustermodel <- function(X, ...) {
-  X$par[["kappa"]] * X$mu
+  X$par.std[["kappa"]] * X$mu
 }
   
 predict.zclustermodel <- function(object, ...,
@@ -121,4 +102,81 @@ reach.zclustermodel <- function(x, ..., epsilon) {
   2 * clusterradius(x, ..., thresh=thresh)
 }
 
+simulate.zclustermodel <- function(object, nsim=1, ..., win=unit.square()) {
+  with(object, {
+    switch(name,
+         Thomas = {
+           rThomas(kappa=par.std[["kappa"]],
+                   scale=par.std[["scale"]],
+                   mu=mu,
+                   win=win,
+                   nsim=nsim,
+                   ...)
+         },
+         MatClust = {
+           rMatClust(kappa=par.std[["kappa"]],
+                     scale=par.std[["scale"]],
+                     mu=mu,
+                     win=win,
+                     nsim=nsim,
+                     ...)
+         },
+         Cauchy = {
+           rCauchy(kappa=par.std[["kappa"]],
+                   scale=par.std[["scale"]],
+                   mu=mu,
+                   win=win,
+                   nsim=nsim,
+                   ...)
+         },
+         VarGamma = {
+           do.call(rVarGamma,
+                   resolve.defaults(
+                     list(kappa=par.std[["kappa"]],
+                          scale=par.std[["scale"]],
+                          mu=mu,
+                          win=win,
+                          nsim=nsim,
+                          ...),
+                     clustargs))
+         },
+         stop(paste("Unrecognised cluster process model name",
+                    sQuote(object$name)),
+              call.=FALSE)
+         )})
+}
+
+clusterkernel.zclustermodel <- function(model, ...) {
+  info <- spatstatClusterModelInfo(model$name)
+  k <- info$kernel
+  par <- model$par.std
+  clustargs <- model$clustargs
+  f <- function(x, y=0, ...) { k(par, sqrt(x^2+y^2), margs=clustargs) }  
+  return(f)
+}
+
+
+#' The following methods are for generics defined in spatstat.model
+
 is.poissonclusterprocess.zclustermodel <- function(model) { TRUE }
+
+pcfmodel.zclustermodel <- function(model, ...) {
+  p <- model$rules$pcf
+  mpar <- model$par.idio
+  other <- model$other
+  f <- function(r) {
+    as.numeric(do.call(p, c(list(par=mpar, rvals=r), other)))
+  }
+  return(f)
+}
+
+Kmodel.zclustermodel <- function(model, ...) {
+  K <- model$rules$K
+  mpar <- model$par.idio
+  other <- model$other
+  f <- function(r) {
+    as.numeric(do.call(K, c(list(par=mpar, rvals=r), other)))
+  }
+  return(f)
+}
+
