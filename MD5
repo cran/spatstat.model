@@ -1,6 +1,6 @@
-3f95f0ec8fd1549828b3a34c6582c18c *DESCRIPTION
-4c2359313ab0da3e29b6e0cdbc63bec9 *NAMESPACE
-e7cb095abd11c5a8dbf79f0c5c1a8923 *NEWS
+465dc6c2a19831ec58982257be1f59b8 *DESCRIPTION
+bae559973f09698b3669a50402b5ea43 *NAMESPACE
+99b83433a90cafe91e02ee0a3ed9414d *NEWS
 1cb9c3f0b25b431722e03617f05b1aac *R/First.R
 52520d3b1f07aa126ad8d36dd1b4a794 *R/Gcom.R
 1101d753c8f35af184bfa8ff36a64486 *R/Gres.R
@@ -12,7 +12,7 @@ b58a1f9410f53357b581a729e8e2fadb *R/aaaa.R
 b47091a376ad8650a9861d61003b3b46 *R/anova.mppm.R
 c95ffd3d971d61e1c60b038741fc1916 *R/anova.ppm.R
 995e5e87814f942ef22477532ffb1637 *R/areainter.R
-af17aae404df2b28967e96dcdfac3be1 *R/auc.R
+5a6f55bbfaa2bc448de73ac19aaa8c3b *R/aucmodel.R
 d4db6751867578ce0bcb408cb1284ec7 *R/augment.msr.R
 7270a0b79a1555829f4a7b6417d31d33 *R/badgey.R
 a0fae8aec838875945ad41c0a9703ba0 *R/bc.R
@@ -36,7 +36,7 @@ deb500eb5d874c0415fb4416c8fe4948 *R/eem.R
 a816a44b139137b878fb2bcc08c5e4b8 *R/effectfun.R
 ca6a7874ed6bf1f3c388318cac2a3ac3 *R/enet.R
 bad9cdfc519c92df5133b33ff14282f9 *R/envelope.R
-e1520ef2dc962d721f57823c8310d756 *R/evidence.R
+539e20657b5ecc8143fc0a992dd481b4 *R/evidence.R
 47db1eb89c59ac77194b4e0f993ca57d *R/evidenceslrm.R
 c539b3e2b2f0419923d74f327368d15d *R/exactMPLEstrauss.R
 a59cbdaba5b58d814afbf184318d06e2 *R/fii.R
@@ -73,8 +73,8 @@ ce9e429b1c61227fb4a0e2af05ec297f *R/makepspace.R
 f9fd754cb5c55209bfb62fe7c62cfb7a *R/measures.R
 bd6af9f08e0f086ce497f9c7aeb3cffd *R/mincontrast.R
 9649ecae60b096f55b55ac25acc84674 *R/model.depends.R
-042cb6654646214f1b6b6bc8527aad80 *R/mpl.R
-fffe80d229c5a07a476cc78c33da6c31 *R/mppm.R
+4803c8656f25cb747165a3af91299c7c *R/mpl.R
+5ed3a3b7dd1a3cde735a0211f588fcce *R/mppm.R
 1ac61059562f1d8dafb26f828841db0e *R/multihard.R
 21dee90242243823e6504b70762e3135 *R/multistrauss.R
 b66e29f48374f2e7c2b4dc9e1465a0b1 *R/multistrhard.R
@@ -122,6 +122,8 @@ a850e312ded923aab35c7b449790b192 *R/rhohat.R
 54dd7d6e9b1454ed9d5bedeaaa79f28d *R/rhohat.slrm.R
 65b0c7ab11362a091411e77794942cbf *R/rmh.ppm.R
 26afbaf959e8fafb6a773fecceb57b53 *R/rmhmodel.ppm.R
+5c6fa27236aecf792652d3ae63208b18 *R/rocdropadd.R
+3dab961a8b0ce120cc992ddbd58df359 *R/rocmodel.R
 5f39627a3ee0c8b9188193678066e24f *R/rppm.R
 d6c9955f67b6ba632995629e59fcbea3 *R/satpiece.R
 06ef1d6ad3f5b348e3c584f4e5411644 *R/saturated.R
@@ -137,7 +139,7 @@ a77335ca398732a1c1ef4ee5fdea8e45 *R/summary.dppm.R
 d693b05f5b9f62d639735107f7ec4371 *R/summary.kppm.R
 8efb82a7e8b81c496030b406d795cd9e *R/summary.mppm.R
 22fa572d558fe64e539562831951a247 *R/summary.ppm.R
-95c47e38a965c33ae5d5df2b206824a4 *R/sysdata.rda
+7e391f96f858d3ccd9238bc6bed373f2 *R/sysdata.rda
 376feb5fb96d24210e75a80c04b50c48 *R/traj.R
 d5d5535a1b90ca8cdd70be99d7a444c3 *R/triplet.family.R
 954f26a72a4d5e59c68dbe379bbffe26 *R/triplets.R
@@ -148,10 +150,11 @@ e3260a100b0bfe656a7ea33ce4743f87 *R/vcov.kppm.R
 b97bc65916071ddab52ee712de6dd07a *R/vcov.mppm.R
 fc0caa69b812d45b9c49922b23106de0 *R/vcov.ppm.R
 696f4e861eb94710978efe804ff3c51b *R/zclustermodel.R
-61eff43100ed2a0cb74628e4d16ecbfc *R/zgibbsmodel.R
+34867e4c2617d99a22cd0685b99628e1 *R/zgibbsmodel.R
+1bf18d9c216b8d95033f0bd2fe2906b2 *build/partial.rdb
 f2d49fc8f50fef7f76bcb3fc7f34efb4 *inst/CITATION
-c9e1b7a0b3d8a4f5f3c9e4337c90d4b3 *inst/doc/packagesizes.txt
-c9e1b7a0b3d8a4f5f3c9e4337c90d4b3 *inst/info/packagesizes.txt
+4882d986294649a2b13467f1c3e326ee *inst/doc/packagesizes.txt
+4882d986294649a2b13467f1c3e326ee *inst/info/packagesizes.txt
 aa5621552412a0eb5a46b14684c19ede *man/AreaInter.Rd
 77fc2d941ecf582f33fa9ea263fe1cb0 *man/BadGey.Rd
 77010074c3c171dbafd1477064cb382c *man/Concom.Rd
@@ -195,6 +198,8 @@ ed9f6967bf14ff3cf8625e3a1f481f81 *man/Poisson.Rd
 71d3fde122987d843db32b64937d4c65 *man/StraussHard.Rd
 3ae98879f59c7f332081af424ada8d9a *man/Triplets.Rd
 bcec7cab7e95afb1bb390187ca30ae9d *man/Window.ppm.Rd
+5874ae2f7954e68b53a28d9fbfad97fb *man/addROC.Rd
+4af5e94ea490319585277989eab55bc5 *man/addapply.Rd
 452889018c35f13fb2f4d9147c1d5392 *man/addvar.Rd
 cfe4ff9c272512c02c0075df2c2ecccb *man/anova.mppm.Rd
 df1a99b74a216622173ac65f4d602990 *man/anova.ppm.Rd
@@ -205,7 +210,7 @@ ee03c3361b0e7068797ac6c189b856d4 *man/as.interact.Rd
 b90060b728337967e25139f1e37b629c *man/as.layered.msr.Rd
 d495cbd65ce6a21abbf9d0bce91a6992 *man/as.owin.ppm.Rd
 87caa8d70e11c26ea329d4becfaaa4fc *man/as.ppm.Rd
-8ceced6f03c14de0a90d00292f524fcc *man/auc.Rd
+9d774b0725b1f75efa93b45964bd05cb *man/auc.ppm.Rd
 3df7907e462038f9d2f410983c4be948 *man/bc.ppm.Rd
 ca78cbf7ee8bf1400077a6ccd472ed5c *man/berman.test.Rd
 f4d0643cb18780d606f8977e131f34b3 *man/cauchy.estK.Rd
@@ -241,6 +246,8 @@ edb8c34118a8284a8946cddfda3392d6 *man/dppeigen.Rd
 435c26403f233030ea066d2135f121c8 *man/dppparbounds.Rd
 976360c41648d086a5d572c80803ee46 *man/dppspecden.Rd
 1f7ad57545508cbaf3ebdf359509c96f *man/dppspecdenrange.Rd
+92e47201c4639d6e23df391619c9dfbf *man/dropROC.Rd
+fe94dda24c8f641414f9dae9c80ec9cf *man/dropply.Rd
 cfe1652069012d2187f56f99553015aa *man/dummify.Rd
 ba8ed1f67d93d29146ee0404294bf971 *man/dummy.ppm.Rd
 2f422aec12d5b327f5598ae9d6dda94c *man/eem.Rd
@@ -291,7 +298,7 @@ f80b4614ef2a05e2b4f075522c9cab14 *man/logLik.mppm.Rd
 9dfb75042a18e996784832572efdb49f *man/logLik.slrm.Rd
 e6f9da6f717d13561c0436d75bf8745f *man/lurking.Rd
 275fc51666be46726ae9f7687bfa7017 *man/lurking.mppm.Rd
-53d372a19a4ee4ad4c522844f2d3d252 *man/macros/defns.Rd
+00756a23079da582b8513a15b8809604 *man/macros/defns.Rd
 6130a4117640b3a35f28657db693f6cf *man/matclust.estK.Rd
 5362d9556ca38fefdb52f4f7006937a7 *man/matclust.estpcf.Rd
 eb7dd4a1eedec9dc245c35a321495e7f *man/measureContinuous.Rd
@@ -346,7 +353,7 @@ e72b714a5be825c513ddf45f07a9dadf *man/ppm.object.Rd
 b09507146205e71a0951ccb14a0a8e6b *man/predict.dppm.Rd
 d9c49bac00c2bba8e4a39634b2fc24c9 *man/predict.kppm.Rd
 a7123137cb84deb1626991964dd624bd *man/predict.mppm.Rd
-2612db9d39f38e9d290e0d9a6f30936b *man/predict.ppm.Rd
+c84b1e11191aca176987aa468b18d581 *man/predict.ppm.Rd
 baf7a18910afda5c22e97a8b394f35ec *man/predict.rppm.Rd
 c18ca3909d48d4b6533329840bcaf84a *man/predict.slrm.Rd
 0bf0e574c2e59c38aa75d2062fc41f3a *man/print.ppm.Rd
@@ -380,7 +387,7 @@ dc4e87100acd1e473f0d9601c6be5866 *man/residuals.ppm.Rd
 6aa471b33d2efe1e1c398b1952c178f1 *man/rhohat.Rd
 988d02a1a5ab278646005cac250b4fa0 *man/rmh.ppm.Rd
 cffecfc434025f2380a01fa26f0616de *man/rmhmodel.ppm.Rd
-045b0296ca2de61332889b52a737dbf3 *man/roc.Rd
+648c8a41e924d0697469e60821a5d008 *man/roc.ppm.Rd
 4cd675664ab4763c2390efb0c9e92a99 *man/rppm.Rd
 c89bec835f6d034f1bf67dfc175b2214 *man/simulate.dppm.Rd
 ed170353e63556f1862094d3461b447d *man/simulate.kppm.Rd
@@ -388,7 +395,7 @@ ed170353e63556f1862094d3461b447d *man/simulate.kppm.Rd
 aab6534dbef6aecfd5b190959eb63926 *man/simulate.ppm.Rd
 f34d48d72ecd6ae6c90f5b9a83f3994f *man/simulate.slrm.Rd
 0e5c8982bdd57076f6c72db71514ff8f *man/slrm.Rd
-c3bd8bbc81b8239ad0e38bf43b2fc8b5 *man/spatstat.model-internal.Rd
+a6c3567f42b85555fd1272eb9259259b *man/spatstat.model-internal.Rd
 a944e698d7dde3b84377aa790e383ad3 *man/spatstat.model-package.Rd
 5e4982aacbfd1921ef2d1b2c8a87e67d *man/split.msr.Rd
 d126bcef08db458fab3c66a99a0af3f7 *man/subfits.Rd
@@ -453,4 +460,4 @@ aae0bb2006690df3251719bfc7d512c7 *tests/testsR1.R
 aedb94f03eba6a97ac1b9cd05c5d4448 *tests/testsR2.R
 efe83ed9ea03ba160ef36e9e46afcd04 *tests/testsS.R
 226fd8fc48c3a6a68e6bf94e46bf1279 *tests/testsT.R
-460f14afe67299e170d4fc6b8b880318 *tests/testsUtoZ.R
+7d7d32190f829854d8523b34fe8639a7 *tests/testsUtoZ.R

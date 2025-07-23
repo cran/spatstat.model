@@ -1,6 +1,6 @@
 #    mpl.R
 #
-#	$Revision: 5.242 $	$Date: 2025/01/18 03:12:15 $
+#	$Revision: 5.249 $	$Date: 2025/06/03 07:27:54 $
 #
 #    mpl.engine()
 #          Fit a point process model to a two-dimensional point pattern
@@ -53,7 +53,8 @@ mpl.engine <-
            preponly=FALSE,
            rename.intercept=TRUE,
            justQ = FALSE,
-           weightfactor = NULL)
+           weightfactor = NULL,
+           Xweights=1)
   {
     GLMname <- if(!missing(GLM)) short.deparse(substitute(GLM)) else NULL
     ## Extract precomputed data if available
@@ -118,7 +119,7 @@ mpl.engine <-
     the.version <- list(major=spv$major,
                         minor=spv$minor,
                         release=spv$patchlevel,
-                        date="$Date: 2025/01/18 03:12:15 $")
+                        date="$Date: 2025/06/03 07:27:54 $")
 
     if(want.inter) {
       ## ensure we're using the latest version of the interaction object
@@ -132,13 +133,17 @@ mpl.engine <-
        !forcefit && !allcovar && is.null(subsetexpr)) {
       ## the model is the uniform Poisson process
       ## The MPLE (= MLE) can be evaluated directly
-      npts <- npoints(X)
-      W    <- as.owin(X)
+      nX <- npoints(X)
+      if(!missing(Xweights))
+        check.nvector(Xweights, nX, oneok=TRUE, vname="Xweights")
+      W  <- as.owin(X)
       if(correction == "border" && rbord > 0) {
-        npts <- sum(bdist.points(X) >= rbord)
+        ## npts <- sum(bdist.points(X) >= rbord)
+        npts <- sum(Xweights * (bdist.points(X) >= rbord))
         areaW <- eroded.areas(W, rbord)
       } else {
-        npts <- npoints(X)
+        ## npts <- npoints(X)
+        npts <- if(length(Xweights) == 1) Xweights * nX else sum(Xweights)
         areaW <- area(W)
       }
       volume <- areaW * markspace.integral(X)
@@ -178,7 +183,8 @@ mpl.engine <-
                    fisher      = fisher,
                    varcov      = varcov,
                    version     = the.version,
-                   problems    = list())
+                   problems    = list(),
+                   Xweights    = Xweights)
       class(rslt) <- "ppm"
       return(rslt)
     }
@@ -193,6 +199,7 @@ mpl.engine <-
                         precomputed=precomputed, savecomputed=savecomputed,
                         covfunargs=covfunargs,
                         weightfactor=weightfactor,
+                        Xweights=Xweights,
                         ...)
     ## back door
     if(preponly) {
@@ -355,7 +362,8 @@ mpl.prepare <- local({
                           weightfactor=NULL,
                           skip.border=FALSE,
                           clip.interaction=TRUE,
-                          splitInf=FALSE) {
+                          splitInf=FALSE,
+                          Xweights=1) {
     ## Q: quadrature scheme
     ## X = data.quad(Q)
     ## P = union.quad(Q)
@@ -367,6 +375,15 @@ mpl.prepare <- local({
 
     want.subset <- !is.null(subsetexpr)
   
+    if(!missing(Xweights)) {
+      if(is.null(Xweights)) {
+        Xweights <- 1
+      } else {
+        check.nvector(Xweights, X$n, things="data points",
+                      vname="Xweights", oneok=TRUE)
+      }
+    }
+    
     computed <- list()
     problems <- list()
   
@@ -425,7 +442,7 @@ mpl.prepare <- local({
       mQ <- marks.quad(Q)   ## is NULL for unmarked patterns
       zQ <- is.data(Q)
       yQ <- numeric(nQ)
-      yQ[zQ] <- 1/wQ[zQ]
+      yQ[zQ] <- Xweights/wQ[zQ]
       zeroes <- attr(wQ, "zeroes")
       sQ <- if(is.null(zeroes)) rep.int(TRUE, nQ) else !zeroes
       ## tweak weights ONLY
@@ -810,7 +827,7 @@ mpl.prepare <- local({
                    is.identifiable=is.identifiable,
                    computed=computed,
                    vnamebase=vnamebase, vnameprefix=vnameprefix,
-                   forbid=forbid)
+                   forbid=forbid, Xweights=Xweights)
     return(result)
   }
 
