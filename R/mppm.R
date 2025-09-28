@@ -1,7 +1,7 @@
 #
 # mppm.R
 #
-#  $Revision: 1.108 $   $Date: 2025/06/26 01:52:24 $
+#  $Revision: 1.111 $   $Date: 2025/09/14 03:14:03 $
 #
 
 mppm <- local({
@@ -121,13 +121,24 @@ mppm <- local({
     ## ---- variables required (on RHS of one of the above formulae) -----
     allvars <- unique(allvars)
 
-  
     ########  EXTRACT DATA  #####################################
   
     ## Insert extra variable 'id'
     data <- cbind.hyperframe(data, id=factor(1:npat))
     data.sumry <- summary(data, brief=TRUE)
     allvars <- unique(c(allvars, "id"))
+
+    ## Check for missing entries
+    if(anyNA(data)) {
+      isna <- is.na(data)
+      relevant <- colnames(data) %in% union(allvars, Yname)
+      goodrows <- !apply(isna[,relevant,drop=FALSE], 1, any)
+      firstgoodrow <- min(which(goodrows))
+    } else {
+      goodrows <- rep(TRUE, npat)
+      firstgoodrow <- 1
+    }
+    allgood <- all(goodrows)
 
     ## Extract the list of responses (point pattern/quadscheme)
     Y <- data[, Yname, drop=TRUE]
@@ -251,7 +262,7 @@ mppm <- local({
     names(Isoffsetlist) <- itags
     ####
     ## ---------------- L O O P ---------------------------------
-    for(i in 1:npat) {
+    for(i in which(goodrows)) {
       ## extract responses and covariates for presentation to ppm()
       Yi <- Y[[i]]
       covariates <-
@@ -279,7 +290,7 @@ mppm <- local({
                           vnamebase=itags[j], vnameprefix=itags[j])
         ## store GLM variable names & check consistency
         vnameij <- prepj$Vnames
-        if(i == 1)
+        if(i == firstgoodrow)
           Vnamelist[[j]] <- vnameij
         else if(!identical(vnameij, Vnamelist[[j]]))
           stop("Internal error: Unexpected conflict in glm variable names")
@@ -302,7 +313,7 @@ mppm <- local({
       }
 
       ## assemble the Mother Of All Data Frames
-      if(i == 1) {
+      if(i == firstgoodrow) {
         moadf <- glmdat
       } else {
         ## There may be new or missing columns
@@ -468,6 +479,7 @@ mppm <- local({
                      names.data=names(data),
                      is.df.column=(data.sumry$storage == "dfcolumn"),
                      rownames=row.names(data),
+                     goodrows=goodrows,
                      correction=prep0$info$correction,
                      rbord=prep0$info$rbord
                      ),
@@ -545,9 +557,10 @@ mppm <- local({
          call.=FALSE)
   }
 
-  quadschemeplus <- function(..., quad.args) {
+  quadschemeplus <- function(data, ..., quad.args) {
+    if(is.NAobject(data)) return(NAobject("quad"))
     #' catch argument 'quad.args' recognised by ppm
-    if(missing(quad.args)) quadscheme(...) else do.call(quadscheme, append(list(...), quad.args))
+    if(missing(quad.args)) quadscheme(data, ...) else do.call(quadscheme, append(list(data, ...), quad.args))
   }
 
   
@@ -612,15 +625,15 @@ quad.mppm <- function(x) {
 }
 
 data.mppm <- function(x) {
-  solapply(x$Y, getElement, name="data")
+  solapply(quad.mppm(x), elementOrNA, nam="data", cl="ppp")
 }
 
 is.marked.mppm <- function(X, ...) {
-  any(sapply(data.mppm(X), is.marked))
+  any(sapply(data.mppm(X), is.marked), na.rm=TRUE)
 }
   
 is.multitype.mppm <- function(X, ...) {
-  any(sapply(data.mppm(X), is.multitype))
+  any(sapply(data.mppm(X), is.multitype), na.rm=TRUE)
 }
   
 windows.mppm <- function(x) {
@@ -668,6 +681,9 @@ nobs.mppm <- function(object, ...) { sum(sapply(data.mppm(object), npoints)) }
 simulate.mppm <- function(object, nsim=1, ..., verbose=TRUE) {
   subs <- subfits(object)
   nr <- length(subs)
+  ok <- !sapply(subs, is.NAobject)
+  if(!all(ok))
+    blanks <- rep(list(NAobject("ppp")), nsim)
   sims <- list()
   if(verbose) {
     splat("Generating simulated realisations of", nr, "models..")
@@ -676,11 +692,15 @@ simulate.mppm <- function(object, nsim=1, ..., verbose=TRUE) {
   for(irow in seq_len(nr)) {
     model.i <- subs[[irow]]
     dont.complain.about(model.i)
-    sims[[irow]] <- do.call(simulate,
-                            resolve.defaults(list(object=quote(model.i),
-                                                  nsim=nsim, drop=FALSE),
-                                             list(...),
-                                             list(progress=FALSE)))
+    if(ok[irow]) {
+      sims[[irow]] <- do.call(simulate,
+                              resolve.defaults(list(object=quote(model.i),
+                                                    nsim=nsim, drop=FALSE),
+                                               list(...),
+                                               list(progress=FALSE)))
+    } else {
+      sims[[irow]] <- blanks
+    }
     if(verbose) state <- progressreport(irow, nr, state=state)
   }
   sim1list <- lapply(sims, "[[", i=1)

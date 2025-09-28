@@ -1,4 +1,49 @@
 
+        CHANGES IN spatstat.model VERSION 3.4-2
+
+OVERVIEW
+
+    o Internal changes to satisfy CRAN.
+
+        CHANGES IN spatstat.model VERSION 3.4-1
+
+OVERVIEW
+
+    o Improvements to intensity.ppm for Geyer models.
+
+    o Simulation of a fitted model in a different window is better supported.
+
+    o Minor improvements.
+    
+    o We thank Andrea Gilardi for contributions.
+    
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o intensity.ppm
+    For Geyer models, the computation is faster,
+    and supports more values of the saturation parameter 'sat',
+    namely sat = 0.5, 1, 1.5, 2, 2.5 and 3.
+
+    o ppm, kppm, dppm, slrm, mppm
+    These model-fitting functions now handle the case where the
+    point pattern is an 'NAobject'.
+
+    o simulate.ppm, rmh.ppm, rmhmodel.ppm
+    New argument 'newdata' allows the model to be simulated
+    in a completely different window, or using different covariate values.
+    
+    o simulate.ppm, rmh.ppm, rmhmodel.ppm
+    A warning or error occurs if there are too many NA values
+    of the model trend in the desired window. 
+
+BUG FIXES
+
+    o predict.mppm
+    Crashed if a covariate contained NA values and
+    the model included random effects. 
+    [Spotted by Andrea Gilardi.]
+    Fixed.
+
         CHANGES IN spatstat.model VERSION 3.4-0
 
 OVERVIEW

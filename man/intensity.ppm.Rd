@@ -54,7 +54,11 @@
     whose resolution is controlled by the arguments \code{\dots}
     which are passed to \code{\link{predict.ppm}}.
     
-    \item if \code{approx="DPP"}, the intensity is calculated using
+    The Poisson saddlepoint approximation uses the Lambert W-function
+    \code{\link{LambertW}} and runs approximately 100 times faster
+    if the suggested package \pkg{gsl} is loaded. 
+
+  \item if \code{approx="DPP"}, the intensity is calculated using
     the approximation of (Coeurjolly and Lavancier, 2018) based on a
     determinantal point process. This approximation is more accurate
     than the Poisson saddlepoint approximation, for inhibitory
@@ -97,15 +101,24 @@
   \code{\link[spatstat.geom]{intensity.ppp}}
 }
 \examples{
+  d <- if(interactive()) 32 else 128
+
   fitP <- ppm(swedishpines ~ 1)
   intensity(fitP)
+
+  fitPx <- ppm(swedishpines ~ x)
+  intensity(fitPx, dimyx=d)
+
   fitS <- ppm(swedishpines ~ 1, Strauss(9))
   intensity(fitS)
   intensity(fitS, approx="D")
+
   fitSx <- ppm(swedishpines ~ x, Strauss(9))
-  lamSx <- intensity(fitSx)
+  lamSx <- intensity(fitSx, dimyx=d)
+
   fitG <- ppm(swedishpines ~ 1, Geyer(9, 1))
   lamG <- intensity(fitG)
+
   fitA <- ppm(swedishpines ~ 1, AreaInter(7))
   lamA <- intensity(fitA)
 }

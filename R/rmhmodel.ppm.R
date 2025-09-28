@@ -3,7 +3,7 @@
 #
 #   convert ppm object into format palatable to rmh.default
 #
-#  $Revision: 2.65 $   $Date: 2022/01/03 05:37:32 $
+#  $Revision: 2.68 $   $Date: 2025/09/28 04:01:23 $
 #
 #   .Spatstat.rmhinfo
 #   rmhmodel.ppm()
@@ -234,7 +234,8 @@ list(
 rmhmodel.ppm <- function(model, w, ...,
                          verbose=TRUE, project=TRUE,
                          control=rmhcontrol(),
-                         new.coef=NULL) {
+                         new.coef=NULL,
+                         newdata=NULL) {
   ## converts ppm object `model' into format palatable to rmh.default
   
   verifyclass(model, "ppm")
@@ -242,6 +243,12 @@ rmhmodel.ppm <- function(model, w, ...,
 
   if(!is.null(new.coef))
     model <- tweak.coefs(model, new.coef)
+
+  if(newdata.given <- !is.null(newdata)) {
+    covariates <- newdata
+  } else {
+    covariates <- model$covariates
+  }
   
   ## Ensure the fitted model is valid
   ## (i.e. exists mathematically as a point process)
@@ -259,12 +266,28 @@ rmhmodel.ppm <- function(model, w, ...,
   ## Extract essential information
   Y <- summary(model, quick="no variances")
 
+  if(Y$uses.covars && newdata.given &&
+     !all(ok <- Y$covars.used %in% names(covariates))) {
+    nbad <- sum(!ok)
+    stop(ngettext(nbad, "Covariate", "Covariates"),
+         commasep(sQuote(Y$covars.used[!ok])),
+         ngettext(nbad, "is", "are"),
+         "absent from", sQuote("newdata"),
+         call.=FALSE)
+  }
+
   if(Y$marked && !Y$multitype)
     stop("Not implemented for marked point processes other than multitype")
 
-  if(Y$uses.covars && is.data.frame(model$covariates))
+  if(Y$uses.covars && is.data.frame(covariates)) {
     stop(paste("This model cannot be simulated, because the",
-               "covariate values were given as a data frame."))
+               if(newdata.given) {
+                 "argument 'newdata' is"
+               } else {
+                 "covariate values were given as"
+               },
+               "a data frame."))
+  }
     
   ## enforce defaults for `control'
 
@@ -333,7 +356,7 @@ rmhmodel.ppm <- function(model, w, ...,
 
   ######## Expanded window for simulation?
 
-  covims <- if(Y$uses.covars) model$covariates[Y$covars.used] else NULL
+  covims <- if(Y$uses.covars) covariates[Y$covars.used] else NULL
     
   wsim <- rmhResolveExpansion(w, control, covims, "covariate")$wsim
       
@@ -351,11 +374,34 @@ rmhmodel.ppm <- function(model, w, ...,
     ## all first order effects are subsumed in Z$trend
     beta <- if(!Y$marked) 1 else rep.int(1, length(Z$types))
     ## predict on window possibly larger than original data window
+    newcovariates <- if(newdata.given) covariates else NULL
     Z$trend <- 
       if(wsim$type == "mask")
-        predict(model, window=wsim, type="trend", locations=wsim)
+        predict(model, window=wsim, type="trend", locations=wsim,
+                covariates=newcovariates)
       else 
-        predict(model, window=wsim, type="trend")
+        predict(model, window=wsim, type="trend",
+                covariates=newcovariates)
+    if(newdata.given) {
+      ## check for substantial fraction of NA's
+      if(!Y$marked) {
+        Atrend <- area(as.owin(Z$trend))
+      } else {
+        Atrend <- mean(sapply(lapply(Z$trend, as.owin), area))
+      }
+      okfrac <- Atrend/area(wsim)
+      if(okfrac < 0.95) {
+        gripe <- paste("The model trend is undefined (NA) at",
+                       percentage(1 - okfrac),
+                       "of locations in the simulation window")
+        if(okfrac < 0.5) 
+          stop(gripe, call.=FALSE)
+        warning(paste(paste0(gripe, ";"),
+                      "simulations will be generated in a sub-window",
+                      "covering only", percentage(okfrac), "of the area"),
+                call.=FALSE)
+      }
+    }
   }
     
   Ncif <- length(Z$cif)
