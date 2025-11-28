@@ -2,7 +2,7 @@
 #
 # Computes the Stoyan-Grabarnik "exponential energy weights" 
 #
-# $Revision: 1.6 $ $Date: 2021/10/30 05:19:06 $
+# $Revision: 1.8 $ $Date: 2025/11/24 06:56:23 $
 #
 
 eem <- function(fit, ...) {
@@ -12,6 +12,19 @@ eem <- function(fit, ...) {
 eem.ppm <- function(fit, check=TRUE, ...) {
   verifyclass(fit, "ppm")
   lambda <- fitted.ppm(fit, dataonly=TRUE, check=check)
+  eemarks <- 1/lambda
+  attr(eemarks, "type") <- "eem"
+  attr(eemarks, "typename") <- "exponential energy marks"
+  return(eemarks)
+}
+
+## Note: class 'exactppm' is defined in spatstat.explore
+## but eem() is a generic defined in spatstat.model
+
+eem.exactppm <- function(fit, ...) {
+  verifyclass(fit, "exactppm")
+  ## lambda <- fitted(fit)
+  lambda <- predict(fit, locations=fit$X)
   eemarks <- 1/lambda
   attr(eemarks, "type") <- "eem"
   attr(eemarks, "typename") <- "exponential energy marks"

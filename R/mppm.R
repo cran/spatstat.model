@@ -1,7 +1,7 @@
 #
 # mppm.R
 #
-#  $Revision: 1.111 $   $Date: 2025/09/14 03:14:03 $
+#  $Revision: 1.119 $   $Date: 2025/11/19 00:56:02 $
 #
 
 mppm <- local({
@@ -143,7 +143,7 @@ mppm <- local({
     ## Extract the list of responses (point pattern/quadscheme)
     Y <- data[, Yname, drop=TRUE]
     if(npat == 1) Y <- solist(Y)
-    Yclass <- data.sumry$classes[Yname]
+    Yclass <- data.sumry$classes[[Yname]]
     if(Yclass == "ppp") {
       ## convert to quadrature schemes, for efficiency's sake
       Y <- solapply(Y, quadschemeplus, ...)
@@ -151,6 +151,11 @@ mppm <- local({
     } else if(Yclass == "quad") {
       Y <- as.solist(Y)
       ## Ydescrip <- "quadrature schemes" ## not used
+    } else if(Yclass == "lpp") {
+      ## convert to quadrature schemes
+      Y <- solapply(Y, quadschemeplus, ...)
+      warning("Support for lpp objects in mppm is experimental",
+              call.=FALSE)
     } else {
       stop(paste("Column", dQuote(Yname), "of data",
                  "does not consist of point patterns (class ppp)",
@@ -162,27 +167,30 @@ mppm <- local({
     used.cov.names <- allvars[allvars %in% datanames]
     has.covar <- (length(used.cov.names) > 0) 
     if(has.covar) {
-      dfvar <- used.cov.names %in% data.sumry$dfnames
-      imvar <- data.sumry$types[used.cov.names] == "im"
-      if(any(nbg <- !(dfvar | imvar)))
-        stop(paste("Inappropriate format for",
-                   ngettext(sum(nbg), "covariate", "covariates"),
-                   paste(sQuote(used.cov.names[nbg]), collapse=", "),
-                   ": should contain image objects or vector/factor"))
+      ## extract hyperframe of covariates only
       covariates.hf <- data[, used.cov.names, drop=FALSE]
-      has.design <- any(dfvar)
+      ## covariates in data frame: vectors/factors
+      dfvar <- used.cov.names %in% data.sumry$dfnames
       dfvarnames <- used.cov.names[dfvar]
+      has.design <- any(dfvar)
       datadf <-
         if(has.design)
           as.data.frame(covariates.hf, discard=TRUE, warn=FALSE)
         else NULL
-      if(has.design) {
-        ## check for NA's in design covariates
-#        if(any(nbg <- apply(is.na(datadf), 2, any)))
-        if(any(nbg <- matcolany(is.na(datadf))))
-          stop(paste("There are NA's in the",
-                     ngettext(sum(nbg), "covariate", "covariates"),
-                     commasep(dQuote(names(datadf)[nbg]))))
+      ## check classes of spatial covariates
+      varclass <- data.sumry$classes[used.cov.names]
+      known <- dfvar | (varclass %in% c("im", "owin", "tess"))
+      if(!all(known)) {
+        ## catch distfun, linim etc
+        isfun <- sapply(as.list(covariates.hf), AllInherit, what="function")
+        isim  <- sapply(as.list(covariates.hf), AllInherit, what="im")
+        known <- known | isfun | isim
+        if(!all(known)) {
+          warning(paste("Unrecognised format for",
+                        ngettext(sum(!known), "covariate", "covariates"),
+                        commasep(sQuote(used.cov.names[!known]))),
+                  call.=FALSE)
+        }
       }
     } else {
       has.design <- FALSE
@@ -244,6 +252,12 @@ mppm <- local({
     }
     ## check for trivial (Poisson) interactions
     trivial <- unlist(lapply(as.list(interaction), allpoisson))
+    ispois <- all(trivial[iused])
+    
+    ## warn about interactions on a network
+    if(!ispois && Yclass == "lpp")
+      warning("Non-Poisson models currently use Euclidean distance",
+              call.=FALSE)
     
     ## check that iformula does not combine two interactions on one row
     nondfnames <- datanames[!(datanames %in% data.sumry$dfnames)]
@@ -474,6 +488,7 @@ mppm <- local({
                      has.covar=has.covar,
                      has.design=has.design,
                      Yname=Yname,
+                     Yclass=Yclass,
                      used.cov.names=used.cov.names,
                      allvars=allvars,
                      names.data=names(data),
@@ -515,6 +530,7 @@ mppm <- local({
                    datadf=datadf)
 
     class(result) <- c("mppm", class(result))
+    
     return(result)
   }
 
@@ -557,13 +573,33 @@ mppm <- local({
          call.=FALSE)
   }
 
-  quadschemeplus <- function(data, ..., quad.args) {
+  quadschemeplus <- function(data, ..., quad.args=list()) {
     if(is.NAobject(data)) return(NAobject("quad"))
     #' catch argument 'quad.args' recognised by ppm
-    if(missing(quad.args)) quadscheme(data, ...) else do.call(quadscheme, append(list(data, ...), quad.args))
+    if(is.ppp(data)) {
+      if(length(quad.args) == 0) {
+        ## for efficiency
+        z <- quadscheme(data, ...)
+      } else {
+        z <- do.call(quadscheme,
+                     resolve.defaults(list(data=data, ...),
+                                      quad.args))
+      }
+    } else if(is.lpp(data)) {
+      if(length(quad.args) == 0) {
+        ## for efficiency
+        z <- linequad(data, ...)
+      } else {
+        z <- do.call(linequad,
+                     resolve.defaults(list(data=data, ...),
+                                      quad.args))
+      }
+    } else stop("Unrecognised type of data for quadrature scheme", call.=FALSE)
+    return(z)
   }
 
-  
+  AllInherit <- function(x, what) { all(sapply(x, inherits, what=what)) }
+    
   mppm
 })
 
@@ -625,7 +661,7 @@ quad.mppm <- function(x) {
 }
 
 data.mppm <- function(x) {
-  solapply(quad.mppm(x), elementOrNA, nam="data", cl="ppp")
+  x$data[, x$Info$Yname, drop=TRUE]
 }
 
 is.marked.mppm <- function(X, ...) {

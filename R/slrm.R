@@ -3,11 +3,15 @@
 #
 #  Spatial Logistic Regression
 #
-#  $Revision: 1.68 $   $Date: 2025/09/11 04:01:17 $
+#  $Revision: 1.79 $   $Date: 2025/11/08 05:17:16 $
 #
 
-slrm <- function(formula, ..., data=NULL, offset=TRUE, link="logit",
+slrm <- function(formula, ..., data=NULL, offset=TRUE,
+                 link=c("logit", "cloglog"),
+                 ruleAtPoints=c("s", "r"),
                  dataAtPoints=NULL, splitby=NULL) {
+  
+  link <- match.arg(link)
   
   # remember call
   CallInfo <- list(callstring = short.deparse(sys.call()),
@@ -17,8 +21,8 @@ slrm <- function(formula, ..., data=NULL, offset=TRUE, link="logit",
                    link=link,
                    splitby=splitby,
                    dotargs=list(...))
-  if(!(link %in% c("logit", "cloglog")))
-    stop(paste("Unrecognised link", dQuote(link)))
+
+  ruleAtPoints <- match.arg(ruleAtPoints)
 
   ########### INTERPRET FORMULA ##############################
   
@@ -59,7 +63,8 @@ slrm <- function(formula, ..., data=NULL, offset=TRUE, link="logit",
 
   ########  FIND DATA AND RESHAPE #######################
 
-  Data <- slr.prepare(CallInfo, parenv, data, dataAtPoints, splitby)
+  Data <- slr.prepare(CallInfo, parenv, data,
+                      ruleAtPoints, dataAtPoints, splitby)
 
   if(is.NAobject(Data)) return(NAobject("slrm"))
   
@@ -97,8 +102,10 @@ slrm <- function(formula, ..., data=NULL, offset=TRUE, link="logit",
 slr.prepare <- local({
 
   slr.prepare <- function(CallInfo, envir, data,
-                        dataAtPoints=NULL, splitby=NULL,
-                        clip=TRUE) {
+                          ruleAtPoints = c("s", "r"),
+                          dataAtPoints = NULL,
+                          splitby=NULL,
+                          clip=TRUE) {
     ## CallInfo is produced by slrm()
     ## envir is parent environment of model formula
     ## data  is 'data' argument that takes precedence over 'envir'
@@ -113,18 +120,13 @@ slr.prepare <- local({
     if(is.NAobject(Y)) return(NAobject("list"))
     if(!is.ppp(Y))
       stop(paste("The response", sQuote(Yname), "must be a point pattern"))
-    ##
-    if(!is.null(dataAtPoints)) {
-      dataAtPoints <- as.data.frame(dataAtPoints)
-      if(nrow(dataAtPoints) != npoints(Y))
-        stop(paste("dataAtPoints should have one row for each point in",
-                   dQuote(Yname)))
-    }
+    
     ## Find the covariates
     ncov <- length(covnames)
     covlist <- lapply(as.list(covnames), getobj, env = envir, dat=data)
     names(covlist) <- covnames
-    ## Each covariate should be an image, a window, a function, or single number
+    ## Each covariate should be an image, window, tessellation, function,
+    ## or single number
     if(ncov == 0) {
       isim <- isowin <- ismask <- isfun <- isnum <-
         isspatial <- israster <- logical(0)
@@ -133,21 +135,25 @@ slr.prepare <- local({
       isowin  <- sapply(covlist, is.owin)
       ismask  <- sapply(covlist, is.mask)
       isfun  <- sapply(covlist, is.function)
-      isspatial <- isim | isowin | isfun
-      israster <- isim | ismask
+      istes  <- sapply(covlist, is.tess)
+      isimtes <- sapply(covlist, isImageTess)
+      isspatial <- isim | isowin | isfun | istes
+      israster <- isim | ismask | isimtes
       isnum <- sapply(covlist, is.numeric) & (lengths(covlist) == 1)
     }
     if(!all(ok <- (isspatial | isnum))) {
       n <- sum(!ok)
       stop(paste(ngettext(n, "The argument", "Each of the arguments"),
                  commasep(sQuote(covnames[!ok])),
-                 "should be either an image, a window, or a single number"))
+                 "should be either an image, a function, a window,",
+                 "a tessellation, or a single number"),
+           call.=FALSE)
     }
     ## 'splitby' 
     if(!is.null(splitby)) {
       splitwin <- covlist[[splitby]]
       if(!is.owin(splitwin))
-        stop("The splitting covariate must be a window")
+        stop("The splitting covariate must be a window", call.=FALSE)
       ## ensure it is a polygonal window
       covlist[[splitby]] <- splitwin <- as.polygonal(splitwin)
       ## delete splitting covariate from lists to be processed
@@ -168,7 +174,22 @@ slr.prepare <- local({
     spatialnames <- names(spatiallist)
     ##  rasternames <- names(rasterlist)
     ##
-  
+
+    ########  EXTRACT DATA AT POINT LOCATIONS #######################
+
+    ruleAtPoints <- match.arg(ruleAtPoints)
+
+    if(!is.null(dataAtPoints)) {
+      ## data at point locations are given; override 'ruleAtPoints'
+      dataAtPoints <- as.data.frame(dataAtPoints)
+      if(nrow(dataAtPoints) != npoints(Y))
+        stop(paste("dataAtPoints should have one row for each point in",
+                   dQuote(Yname)))
+    } else if(ruleAtPoints == "r") {
+      dataAtPoints <- as.data.frame(lapply(covlist, evaluateAtPoints, Y=Y))
+      dataAtPoints <- cbind(coords(Y), dataAtPoints)
+    }
+    
     ########  CONVERT TO RASTER DATA  ###############################
 
     ## determine spatial domain & common resolution: convert all data to it
@@ -183,9 +204,9 @@ slr.prepare <- local({
         D <- do.call(union.owin, domains)
       }
       ## Create template mask
-      W <- do.call.matched(as.mask, append(list(w=D), dotargs))
+      W <- do.call(AsMaskInternal, append(list(w=D), dotargs))
       ## Convert all spatial objects to this resolution
-      spatiallist <- lapply(spatiallist, convert, W=W)
+      spatiallist <- lapply(spatiallist, convertToImage, W=W, dotargs=dotargs)
     } else {
       ## Pixel resolution is determined implicitly by covariate data
       W <- do.call(commonGrid, rasterlist)
@@ -194,7 +215,7 @@ slr.prepare <- local({
         W <- intersect.owin(W, as.owin(Y))
       }
       ## Adjust spatial objects to this resolution
-      spatiallist <- lapply(spatiallist, convert, W=W)
+      spatiallist <- lapply(spatiallist, convertToImage, W=W)
     }
     ## images containing coordinate values
     xcoordim <- as.im(function(x,y){x}, W=W)
@@ -262,12 +283,30 @@ slr.prepare <- local({
     else return(get(nama, envir=env))
   }
 
-  convert <- function(x,W) {
-    if(is.im(x) || is.function(x)) return(as.im(x,W))
-    if(is.owin(x)) return(as.im(x, W, value=TRUE, na.replace=FALSE))
+  convertToImage <- function(x,W,dotargs) {
+    if(is.im(x) || is.function(x) || is.tess(x)) return(as.im(x,W))
+    if(is.owin(x)) {
+      if(!is.mask(x)) x <- do.call(owin2mask, append(list(W=x), dotargs))
+      return(as.im(x, W, value=TRUE, na.replace=FALSE))
+    }
     return(NULL)
   }
 
+  isImageTess <- function(x) { is.tess(x) && (x$type == "image") }
+
+  evaluateAtPoints <- function(f, Y) {
+    if(is.function(f)) return(f(Y))
+    if(is.im(f)) return(f[Y, drop=FALSE])
+    if(is.owin(f)) return(inside.owin(Y, w=f))
+    if(is.numeric(f) && length(f) == 1) return(rep(f, npoints(Y)))
+    if(is.tess(f)) {
+      z <- tileindex(Y, Z=f)
+      z <- factor(z, levels=seq_len(nobjects(f)), labels=tilenames(f))
+      return(z)
+    }
+    return(NULL)
+  }
+  
   slr.prepare
 })
 
@@ -358,6 +397,18 @@ print.slrm <- function(x, ...) {
   print(x$CallInfo$formula)
   splat("Fitted coefficients:")
   print(coef(x))
+  W <- x$Data$W
+  splat("Pixel grid:", W$dim[1L], "x", W$dim[2L], "pixels (ny, nx)")
+  ui <- summary(unitname(W))
+  if(W$xstep == W$ystep) {
+    splat("Square pixels of side length",
+          signif(W$xstep, 4),
+          ui$plural, ui$explain)
+  } else {
+    splat("Rectangular pixels of side", 
+          signif(W$xstep, 4), "x", signif(W$ystep, 4),
+          ui$plural, ui$explain)
+  }
   return(invisible(NULL))
 }
 
@@ -379,7 +430,8 @@ summary.slrm <- function(object, ...) {
                               CI95.hi  = hi,
                               Ztest    = psig,
                               Zval     = zval)
-  class(y) <- c(class(y), "summary.slrm")
+  y$W <- summary(object$Data$W)
+  class(y) <- unique(c("summary.slrm", class(y)))
   return(y)
 }
 
@@ -401,6 +453,8 @@ print.summary.slrm <- function(x, ...) {
   print(x$formula)
   splat("Fitted coefficients:\t")
   print(x$coefs.SE.CI)
+  splat("Pixel raster:")
+  print(x$W)
   return(invisible(NULL))
 }
 
@@ -437,27 +491,29 @@ logLik.slrm <- function(object, ..., adjust=TRUE) {
 fitted.slrm <- function(object, ..., type="probabilities",
                         dataonly=FALSE, leaveoneout=FALSE) {
   trap.extra.arguments(...)
-  ## predict at every pixel
-  Z <- predict(object, type=type)
   if(!dataonly) {
+    ## Predict at every pixel
+    Z <- predict(object, type=type, leaveoneout=leaveoneout)
     return(Z)
-  }
-  ## require fitted values only at original point locations
-  X <- response(object)
-  if(!leaveoneout) {
-    ## just extract fitted values
-    ZX <- safelookup(Z, X)
+  } else {
+    ## Require fitted values at original point locations
+    X <- response(object)
+    if(!leaveoneout) {
+      ## predict at every pixel, extract fitted values at original points
+      Z <- predict(object, type=type)
+      ZX <- safelookup(Z, X)
+    } else {
+      ## leave-one-out calculation, brute force
+      nX <- npoints(X)
+      ZX <- numeric(nX)
+      for(i in seq_len(nX)) {
+        model.i <- updateData(object, X[-i])
+        Z.i <- predict(model.i, type=type)
+        ZX[i] <- safelookup(Z.i, X[i])
+      }
+    }
     return(ZX)
-  }
-  ## leave-one-out calculation, directly
-  nX <- npoints(X)
-  ZX <- numeric(nX)
-  for(i in seq_len(nX)) {
-    model.i <- updateData(object, X[-i])
-    Z.i <- predict(model.i)
-    ZX[i] <- safelookup(Z.i, X[i])
-  }
-  return(ZX)
+  } 
 }
 
 intensity.slrm <- function(X, ...) {
@@ -467,7 +523,8 @@ intensity.slrm <- function(X, ...) {
 }
 
 predict.slrm <- function(object, ..., type="intensity",
-                         newdata=NULL, window=NULL) {
+                         newdata=NULL, window=NULL,
+                         leaveoneout=FALSE, fast=TRUE) {
   type <- pickoption("type", type,
                      c(probabilities="probabilities",
                        link="link",
@@ -482,32 +539,121 @@ predict.slrm <- function(object, ..., type="intensity",
   df      <- object$Data$df
   loga    <- df$logpixelarea
 
+  linkfun <- FIT$family$linkfun
+
   if(!is.null(window)) window <- as.owin(window)
-  
+
   if(is.null(newdata) && is.null(window) && is.null(splitby)) {
-    # fitted pixel values from existing fit
-    switch(type,
-           probabilities={
-             values <- fitted(FIT)
-           },
-           link={
-             values <- predict(FIT, type="link")
-           },
-           intensity={
-             # this calculation applies whether an offset was included or not
-             if(link == "cloglog") {
-               linkvalues <- predict(FIT, type="link")
-               values <- exp(linkvalues - loga)
-             } else {
-               probs <- fitted(FIT)
-               values <- -log(1-probs)/exp(loga)
+    if(!leaveoneout) {
+      ## fitted pixel values from existing fit
+      switch(type,
+             probabilities={
+               values <- fitted(FIT)
+             },
+             link={
+               values <- predict(FIT, type="link")
+             },
+             intensity={
+               ## this calculation applies whether an offset was included or not
+               switch(link,
+                      cloglog = {
+                        linkvalues <- predict(FIT, type="link")
+                        values <- exp(linkvalues - loga)
+                      },
+                      logit = {
+                        probs <- fitted(FIT)
+                        values <- -log(1-probs)/exp(loga)
+                      })
              }
-           }
-           )
+             )
+    } else if(fast) {
+      ## leave-one-out fitted values, leverage approximation
+      phat <- fitted(FIT)
+      y <- response(FIT)
+      h <- hatvalues(FIT)
+      ## leverage approximation to mean response
+      pminus <- phat - (y - phat) * h
+      ## convert to desired values
+      values <- switch(type,
+                       probabilities = pminus,
+                       link          = linkfun(pminus),
+                       intensity     = -log(1-pminus)/exp(loga))
+    } else {
+      ## leave-one-out fitted values, brute force
+      n <- nrow(df)
+      values <- numeric(n)
+      FITcall <- as.list(getCall(FIT))
+      FITenv <- environment(terms(FIT))
+      switch(type,
+             probabilities = {
+               for(i in 1:n) {
+                 ## refit the GLM without using row i
+                 z <- as.call(c(FITcall, list(subset=-i)))
+                 FIT.i <- eval(z, envir=FITenv)
+                 ## predict using data at row i
+                 df.i <- df[i, , drop=FALSE]
+                 ## calculate fitted probability
+                 values[i] <- predict(FIT.i, newdata=df.i, type="response")
+               }
+             },
+             link={
+               for(i in 1:n) {
+                 ## refit the GLM without using row i
+                 z <- as.call(c(FITcall, list(subset=-i)))
+                 FIT.i <- eval(z, envir=FITenv)
+                 ## predict using data at row i
+                 df.i <- df[i, , drop=FALSE]
+                 ## calculate values of linear predictor
+                 values[i] <- predict(FIT.i, newdata=df.i, type="link")
+               }
+             },
+             intensity={
+               switch(link,
+                      cloglog = {
+                        ## First calculate linear predictor
+                        linkvalues <- numeric(n)
+                        for(i in 1:n) {
+                          ## refit the GLM without using row i
+                          z <- as.call(c(FITcall, list(subset=-i)))
+                          FIT.i <- eval(z, envir=FITenv)
+                          ## predict using data at row i
+                          df.i <- df[i, , drop=FALSE]
+                          ## calculate values of linear predictor
+                          linkvalues[i] <-
+                            predict(FIT.i, newdata=df.i, type="link")
+                        }
+                        ## Convert to intensity values
+                        values <- exp(linkvalues - loga)
+                      },
+                      logit = {
+                        ## First calculate probabilities
+                        probabilities <- numeric(n)
+                        for(i in 1:n) {
+                          ## refit the GLM without using row i
+                          z <- as.call(c(FITcall, list(subset=-i)))
+                          FIT.i <- eval(z, envir=FITenv)
+                          ## predict using data at row i
+                          df.i <- df[i, , drop=FALSE]
+                          ## calculate probability
+                          probabilities[i] <-
+                            predict(FIT.i, newdata=df.i, type="response")
+                        }
+                        ## Convert to intensity values
+                        values <- -log(1-probabilities)/exp(loga)
+                      })
+             }
+             )
+    }
+    ## form a pixel image from 'values'
     out <- im(values, xcol=W$xcol, yrow=W$yrow, unitname=unitname(W))
     return(out)
   } else {
     ## prediction from new data and/or at new locations
+    if(leaveoneout)
+      warning(paste("Argument", sQuote("leaveoneout=TRUE"),
+                    "ignored because prediction is performed for new",
+                    if(is.null(newdata)) "locations" else "data"),
+              call.=FALSE)
     if(is.null(newdata)) {
       ## prediction using existing covariates, at new locations
       newdata <- object$Data$covariates

@@ -1,6 +1,6 @@
 Package: spatstat.model
-Version: 3.4-2
-Date: 2025-09-28
+Version: 3.5-0
+Date: 2025-11-28
 Title: Parametric Statistical Modelling and Inference for the
         'spatstat' Family
 Authors@R: c(person("Adrian", "Baddeley", 
@@ -56,14 +56,14 @@ Authors@R: c(person("Adrian", "Baddeley",
 	     person("Hangsheng", "Wang",
 	            role = "ctb"))
 Maintainer: Adrian Baddeley <Adrian.Baddeley@curtin.edu.au>
-Depends: R (>= 3.5.0), spatstat.data (>= 3.1-6), spatstat.univar (>=
-        3.1-4), spatstat.geom (>= 3.6), spatstat.random (>= 3.4-1),
-        spatstat.explore (>= 3.5-2), stats, graphics, grDevices, utils,
+Depends: R (>= 3.5.0), spatstat.data (>= 3.1-9), spatstat.univar (>=
+        3.1-5), spatstat.geom (>= 3.6-1), spatstat.random (>= 3.4-3),
+        spatstat.explore (>= 3.6-0), stats, graphics, grDevices, utils,
         methods, nlme, rpart
 Imports: spatstat.utils (>= 3.2), spatstat.sparse (>= 3.1), mgcv,
         Matrix, abind, tensor, goftest (>= 1.2-2)
 Suggests: sm, gsl, locfit, spatial, fftwtools (>= 0.9-8), nleqslv,
-        glmnet, spatstat.linnet (>= 3.3), spatstat (>= 3.4)
+        glmnet, spatstat.linnet (>= 3.3-2), spatstat (>= 3.4-1)
 Description: Functionality for parametric statistical modelling and inference for spatial data,
 	     mainly spatial point patterns, in the 'spatstat' family of packages.
 	     (Excludes analysis of spatial data on a linear network,
@@ -75,7 +75,7 @@ URL: http://spatstat.org/
 NeedsCompilation: yes
 ByteCompile: true
 BugReports: https://github.com/spatstat/spatstat.model/issues
-Packaged: 2025-09-28 04:10:39 UTC; adrian
+Packaged: 2025-11-28 00:52:49 UTC; adrian
 Author: Adrian Baddeley [aut, cre, cph] (ORCID:
     <https://orcid.org/0000-0001-9499-8382>),
   Rolf Turner [aut, cph] (ORCID: <https://orcid.org/0000-0001-5521-5218>),
@@ -101,4 +101,4 @@ Author: Adrian Baddeley [aut, cre, cph] (ORCID:
   Rasmus Plenge Waagepetersen [ctb],
   Hangsheng Wang [ctb]
 Repository: CRAN
-Date/Publication: 2025-09-28 05:20:02 UTC
+Date/Publication: 2025-11-28 06:20:29 UTC

@@ -3,7 +3,7 @@
 #'
 #'   method for 'spatialCovariateEvidence' for class 'slrm'
 #'
-#'   $Revision: 1.8 $ $Date: 2022/07/18 04:31:45 $
+#'   $Revision: 1.9 $ $Date: 2025/11/07 05:17:34 $
 
 spatialCovariateEvidence.slrm <- function(model, covariate, ...,
                            lambdatype=c("probabilities", "intensity"),
@@ -141,12 +141,17 @@ spatialCovariateEvidence.slrm <- function(model, covariate, ...,
   check.finite(lambda, xname=lambdaname, usergiven=FALSE)
   check.finite(Zvalues, xname="the covariate", usergiven=TRUE)
   
-  #' lambda values at data points
+  #' lambda values at presence pixels (NOT data points!)
   lambdaX <- lambda[presence]
 
   #' lambda image(s)
   lambdaimage <- predict(model, window=W, type=lambdatype)
-    
+
+  #' expected number of points in each pixel
+  EdN <- switch(lambdatype,
+                probabilities = lambda,
+                intensity     = lambda * pixelareas)
+  
   #' wrap up 
   values <- list(Zimage      = Z,
                  lambdaimage = lambdaimage,
@@ -154,6 +159,7 @@ spatialCovariateEvidence.slrm <- function(model, covariate, ...,
                  lambda      = lambda,
                  lambdaX     = lambdaX,
                  weights     = pixelareas,
+                 EdN         = EdN,
                  ZX          = ZX,
                  type        = type)
   return(list(values=values, info=info))

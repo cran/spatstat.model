@@ -22,7 +22,7 @@
 \alias{data.mppm}
 \alias{deltasuffstat}
 \alias{dfbetas.ppmInfluence}
-\alias{diagnose.ppm.engine}
+\alias{diagppmEngine}
 \alias{dim.msr}
 \alias{dimnames.msr}
 \alias{doMultiStraussHard}
@@ -31,6 +31,7 @@
 \alias{dppmFixIntensity}
 \alias{DPPSaddle}
 \alias{DPPSaddlePairwise}
+\alias{eem.exactppm}
 \alias{enet.engine}
 \alias{equalpairs}          
 \alias{evalInteraction}
@@ -131,6 +132,7 @@
 \alias{parameters.detpointprocfamily}
 \alias{PairPotentialType}
 \alias{partialModelMatrix}
+\alias{partialResidualEngine}
 \alias{pcfmodel.clusterprocess}
 \alias{pcfmodel.slrm}
 \alias{ploterodewin}
@@ -184,6 +186,7 @@
 \alias{reduceformula}
 \alias{reincarnate.interact}
 \alias{rescale.msr}
+\alias{residuals.exactppm}
 \alias{resid4plot}
 \alias{resid1plot}
 \alias{resid1panel}
@@ -202,6 +205,7 @@
 \alias{slrAssemblePixelData}
 \alias{slrmInfluence}
 \alias{spatialCovariateEvidence.ppm}
+\alias{spatialCovariateEvidence.dppm}
 \alias{spatialCovariateEvidence.kppm}
 \alias{spatialCovariateEvidence.slrm}
 \alias{spatialCovariateUnderModel}
@@ -271,10 +275,10 @@ deltasuffstat(model, \dots,
               restrict, dataonly, sparseOK, quadsub,
               force, warn.forced, verbose, use.special)
 \method{dfbetas}{ppmInfluence}(model, \dots)
-diagnose.ppm.engine(object, \dots, type, typename, opt,
-                         sigma, rbord, compute.sd, compute.cts,
-                         envelope, nsim, nrank,
-                         rv, oldstyle, splineargs, verbose)
+diagppmEngine(object, \dots, type, typename, opt,
+              sigma, rbord, compute.sd, compute.cts,
+              envelope, nsim, nrank,
+              rv, oldstyle, splineargs, verbose)
 \method{dim}{msr}(x)
 \method{dimnames}{msr}(x)
 doMultiStraussHard(iradii, hradii, types)
@@ -283,6 +287,7 @@ dppmFixIntensity(DPP, lambda, po)
 dppmFixAlgorithm(algorithm, changealgorithm, clusters, startpar)
 DPPSaddle(beta, fi, invert)
 DPPSaddlePairwise(beta, fi, invert)
+\method{eem}{exactppm}(fit, \dots)
 enet.engine(model, \dots, standardize, lambda, alpha, adaptive) 
 equalpairs(U, X, marked=FALSE)
 evalInteraction(X,P,E,interaction,correction,splitInf,\dots,
@@ -424,6 +429,9 @@ oversize.quad(Q, \dots, nU, nX, p)
 PairPotentialType(pairpot)
 \method{parameters}{detpointprocfamily}(model, \dots)
 partialModelMatrix(X,D,model,callstring,\dots)
+partialResidualEngine(model, covariate, \dots,
+     smooth.effect, subregion, bw, adjust, from, to, n,
+     bw.input, bw.restrict, covname, callstring, modelname, do.variance)
 \method{pcfmodel}{clusterprocess}(model, \dots)
 \method{pcfmodel}{slrm}(model, \dots)
 ploterodewin(W1, W2, col.edge, col.inside, do.plot, \dots)
@@ -491,6 +499,7 @@ quadBlockSizes(nX, nD, p, nMAX, announce)
 reduceformula(fmla, deletevar, verbose)
 reincarnate.interact(object)
 \method{rescale}{msr}(X, s, unitname)
+\method{residuals}{exactppm}(object, type, \dots)
 resid4plot(RES, plot.neg, plot.smooth,
            spacing, outer, srange, monochrome, main,
            xlab, ylab, rlab, col.neg, col.smooth, \dots)
@@ -511,12 +520,13 @@ safePositiveValue(x, default)
 \method{shift}{msr}(X, \dots)
 signalStatus(x, errors.only)
 \method{simulate}{profilepl}(object, \dots)
-slr.prepare(CallInfo, envir, data, dataAtPoints, splitby, clip)
+slr.prepare(CallInfo, envir, data, ruleAtPoints, dataAtPoints, splitby, clip)
 slrAssemblePixelData(Y, Yname, W, covimages, dataAtPoints, pixelarea)
 slrmInfluence(model, what, \dots)
 \method{spatialCovariateEvidence}{ppm}(model, covariate, \dots, lambdatype,
           dimyx, eps, rule.eps, interpolate, jitter, jitterfactor,
           modelname, covname, dataname, subset, clip.predict, raster.action) 
+\method{spatialCovariateEvidence}{dppm}(model, covariate, \dots)
 \method{spatialCovariateEvidence}{kppm}(model, covariate, \dots)
 \method{spatialCovariateEvidence}{slrm}(model, covariate, \dots, lambdatype,
           jitter, jitterfactor,
@@ -545,7 +555,7 @@ tweak.coefs(model, new.coef)
 \method{unitname}{msr}(x) <- value 
 \method{update}{ippm}(object, \dots, envir) 
 \method{update}{msr}(object, \dots)
-\method{updateData}{ppm}(model, X, \dots, warn)
+\method{updateData}{ppm}(model, X, \dots, warn, use.internal)
 \method{updateData}{kppm}(model, X, \dots)
 \method{updateData}{dppm}(model, X, \dots)
 \method{updateData}{slrm}(model, X, \dots)

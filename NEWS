@@ -1,4 +1,79 @@
 
+        CHANGES IN spatstat.model VERSION 3.5-0
+
+OVERVIEW
+
+    o Models for replicated point patterns on linear networks.
+    
+    o ROC curves for determinantal point process models.
+
+    o Partial residuals for cluster process and Cox process models.
+    
+    o Extended facilities for spatial logistic regression.
+
+    o Bug fixes and internal improvements.
+
+NEW FUNCTIONS
+
+    o diagnose
+    New generic function for model diagnostics.
+
+    o parres
+    New generic function for partial residuals.
+    
+    o parres.ppm
+    The original function 'parres' has now become the method 'parres.ppm'.
+
+    o parres.kppm
+    Partial residual plot for fitted cluster process or Cox process models.
+
+    o roc.dppm
+    Compute ROC curve for a determinantal point process model.
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o diagnose.ppm
+    This is now a method for the generic function 'diagnose'.
+    
+    o fitted.slrm
+    Argument 'leaveoneout' is no longer ignored when 'dataonly=FALSE';
+    it now supports 'leave-one-pixel-out' prediction.
+
+    o mppm
+    Now allows the response variable to be a point pattern on a linear network.
+    This is experimental code.
+
+    o predict.slrm
+    New argument 'leaveoneout' supports leave-one-pixel-out calculation
+    of predicted values, and new argument 'fast' determines the algorithm used.
+
+    o print.slrm
+    Now prints information about the pixel raster.
+
+    o residualMeasure
+    More options for argument 'lambda'.
+    
+    o roc.slrm
+    Changed interpretation of argument 'leaveoneout=TRUE'.
+    This now performs 'leave-one-pixel-out' calculation
+    (previously it performed 'leave-one-point-out' calculation).
+    
+    o slrm
+    New argument 'ruleAtPoints' controls discretisation rule at data points.
+
+    o slrm
+    Arguments '...' are now passed to 'owin2mask' to determine the
+    polygon-to-raster discretisation rule for a covariate of class 'owin'.
+
+    o summary.slrm
+    Now prints information about the pixel raster.
+    
+BUG FIXES
+
+    o fitted.slrm
+    Calculation was incorrect when leaveoneout=TRUE and type != "intensity".
+    Fixed.
+    
         CHANGES IN spatstat.model VERSION 3.4-2
 
 OVERVIEW
