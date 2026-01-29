@@ -56,10 +56,11 @@
   \adrian.
 }
 \seealso{
-  \code{\link{kppm}}, \code{\link{panysib}}
+  \code{\link{kppm}}, \code{\link{panysib}}, \code{\link{persist}},
+  \code{\link{repul}}.
 }
 \examples{
-  fit <- kppm(redwood ~1, "Thomas")
+  fit <- kppm(redwood3 ~1, "Thomas")
   psib(fit)
 }
 \keyword{spatial}

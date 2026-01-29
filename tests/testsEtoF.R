@@ -133,43 +133,59 @@ local({
   envelopeTest(X, exponent=3, clamp=TRUE, nsim=9)
 })
 }
-#
-#    tests/fastgeyer.R
-#
-# checks validity of fast C implementation of Geyer interaction
-#
-#    $Revision: 1.4 $  $Date: 2020/04/28 12:58:26 $
-#
+#'
+#'    tests/fasteval.R
+#'
+#'    Checks validity of fast C implementations of Gibbs interaction terms
+#'
+#'    $Revision: 1.8 $  $Date: 2026/01/18 10:27:23 $
+#'
 if(FULLTEST) {  # depends on hardware
 local({
   X <- redwood
   Q <- quadscheme(X)
   U <- union.quad(Q)
-  EP <- equalpairs.quad(Q)
-  G <- Geyer(0.11, 2)
-# The value r=0.11 is chosen to avoid hardware numerical effects (gcc bug 323).
-# It avoids being close any value of pairdist(redwood).
-# The nearest such values are 0.1077.. and 0.1131..
-# By contrast if r = 0.1 there are values differing from 0.1 by 3e-17
-  a <- pairsat.family$eval(X,U,EP,G$pot,G$par,"border")
-  b <-          G$fasteval(X,U,EP,G$pot,G$par,"border")
-  if(!all(a==b))
-    stop("Results of Geyer()$fasteval and pairsat.family$eval do not match")
-# ...
-# and again for a non-integer value of 'sat'
-# (spotted by Thordis Linda Thorarinsdottir)  
-  G <- Geyer(0.11, 2.5)
-  a <- pairsat.family$eval(X,U,EP,G$pot,G$par,"border")
-  b <-          G$fasteval(X,U,EP,G$pot,G$par,"border")
-  if(!all(a==b))
-    stop("Results of Geyer()$fasteval and pairsat.family$eval do not match when sat is not an integer")
-# and again for sat < 1
-# (spotted by Rolf)  
-  G <- Geyer(0.11, 0.5)
-  a <- pairsat.family$eval(X,U,EP,G$pot,G$par,"border")
-  b <-          G$fasteval(X,U,EP,G$pot,G$par,"border")
-  if(!all(a==b))
-    stop("Results of Geyer()$fasteval and pairsat.family$eval do not match when sat < 1")
+  E <- equalpairs.quad(Q)
+  checkit <- function(A, toler=sqrt(.Machine$double.eps)) {
+    ## 'A' is an interaction object
+    Aname <- deparse(substitute(A))
+    a <- A$family$eval(X, U, E, A$pot, A$par, "border")
+    b <-    A$fasteval(X, U, E, A$pot, A$par, "border")
+    attr(a, "POT") <- NULL
+    fa <- is.finite(a)
+    fb <- is.finite(b)
+    if(!all(fa & fb)) {
+      if(any(fa != fb))
+        stop(paste0(Aname, "$family$eval and ",
+                    Aname, "$fasteval do not agree on Infinite values"))
+      a <- a[fa]
+      b <- b[fb]
+    }
+    if(max(abs(a-b)) > toler) {
+      stop(paste0(Aname, "$family$eval and ",
+                  Aname, "$fasteval do not agree"))
+    }
+    range(a-b)
+  }
+  R <- 0.11
+  #' R=0.11 is chosen to avoid hardware numerical effects (gcc bug 323).
+  #' It avoids being close any value of pairdist(redwood).
+  #' The nearest such values are 0.1077.. and 0.1131..
+  #' By contrast if r = 0.1 there are values differing from 0.1 by 3e-17
+  #' ................. Strauss interaction ...........................
+  checkit(Strauss(R))
+  #' ................. Strauss-Hard core interaction ...........................
+  checkit(StraussHard(R, 0.015))
+  #' ................. Geyer interaction ...........................
+  checkit(Geyer(R, 2))
+  #' and again for a non-integer value of 'sat'
+  #' (spotted by Thordis Linda Thorarinsdottir)  
+  checkit(Geyer(R, 2.5))
+  #' and again for sat < 1
+  #' (spotted by Rolf)  
+  checkit(Geyer(R, 0.5))
+  #' ................. Penttinen interaction ...........................
+  checkit(Penttinen(R/2))
 })
 }
 

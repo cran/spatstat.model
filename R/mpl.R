@@ -1,6 +1,6 @@
 #    mpl.R
 #
-#	$Revision: 5.249 $	$Date: 2025/06/03 07:27:54 $
+#	$Revision: 5.256 $	$Date: 2026/01/21 06:26:39 $
 #
 #    mpl.engine()
 #          Fit a point process model to a two-dimensional point pattern
@@ -54,8 +54,8 @@ mpl.engine <-
            rename.intercept=TRUE,
            justQ = FALSE,
            weightfactor = NULL,
-           Xweights=1)
-  {
+           Xweights=1
+ ) {
     GLMname <- if(!missing(GLM)) short.deparse(substitute(GLM)) else NULL
     ## Extract precomputed data if available
     if(!is.null(precomputed$Q)) {
@@ -84,9 +84,13 @@ mpl.engine <-
     if(!is.null(clipwin)) {
       if(is.data.frame(covariates)) 
         covariates <- covariates[inside.owin(P, w=clipwin), , drop=FALSE]
+      #' catch information used by 'linequad'
+      situ <- attr(Q, "situ")
       Q <- Q[clipwin]
       X <- X[clipwin]
       P <- P[clipwin]
+      if(!is.null(situ))
+        attr(Q, "situ") <- situ[clipwin]
     }
     ## secret exit  
     if(justQ) return(Q)
@@ -110,16 +114,21 @@ mpl.engine <-
     if(is.null(trend)) {
       trend <- ~1
       environment(trend) <- parent.frame()
+      want.trend <- FALSE
+    } else {
+      want.trend <- !identical.formulae(trend, ~1)
     }
-    want.trend <- !identical.formulae(trend, ~1)
     want.inter <- !is.null(interaction) && !is.null(interaction$family)
 
+    ## environment (should only be needed to find functions)
+    env.trend <- environment(trend)
+    
     ## Stamp with spatstat version number
     spv <- package_version(versionstring.spatstat())
     the.version <- list(major=spv$major,
                         minor=spv$minor,
                         release=spv$patchlevel,
-                        date="$Date: 2025/06/03 07:27:54 $")
+                        date="$Date: 2026/01/21 06:26:39 $")
 
     if(want.inter) {
       ## ensure we're using the latest version of the interaction object
@@ -184,7 +193,8 @@ mpl.engine <-
                    varcov      = varcov,
                    version     = the.version,
                    problems    = list(),
-                   Xweights    = Xweights)
+                   Xweights    = Xweights
+                   )
       class(rslt) <- "ppm"
       return(rslt)
     }
@@ -334,7 +344,9 @@ mpl.engine <-
            rbord        = rbord,
            terms        = terms(trend),
            version      = the.version,
-           problems     = problems)
+           problems     = problems,
+           Xweights     = Xweights
+        )
     class(rslt) <- "ppm"
     return(rslt)
   }  
@@ -367,7 +379,7 @@ mpl.prepare <- local({
     ## Q: quadrature scheme
     ## X = data.quad(Q)
     ## P = union.quad(Q)
-  
+
     if(missing(want.trend))
       want.trend <- !is.null(trend) && !identical.formulae(trend, ~1)
     if(missing(want.inter))
@@ -383,6 +395,12 @@ mpl.prepare <- local({
                       vname="Xweights", oneok=TRUE)
       }
     }
+
+    #' reserved names for coordinates
+    reserved.vars <- c("x", "y", if(is.marked(Q)) "marks" else NULL)
+    #' add local coordinates e.g. in linear network
+    if(has.insitu <- !is.null(situ <- attr(Q, "situ"))) 
+      reserved.vars <- union(reserved.vars, names(coords(situ)))
     
     computed <- list()
     problems <- list()
@@ -419,7 +437,7 @@ mpl.prepare <- local({
             covnames <- union(covnames, all.vars(subsetexpr))
           if(allcovar)
             covnames <- union(covnames, names(covariates))
-          covnames <- setdiff(covnames, c("x", "y", "marks"))
+          covnames <- setdiff(covnames, reserved.vars)
           ## resolve 'external' covariates
           tenv <- environment(trend)
           covariates <- getdataobjects(covnames, tenv, covariates, fatal=TRUE)
@@ -434,9 +452,12 @@ mpl.prepare <- local({
 
     ## Form the weights and the ``response variable''.
 
-    if("dotmplbase" %in% names.precomputed) 
+    if("dotmplbase" %in% names.precomputed) {
       .mpl <- precomputed$dotmplbase
-    else {
+      if(is.marked(Q) && is.null(.mpl$MARKS))
+        stop("Internal error: mark values are missing from precomputed data",
+             call.=FALSE)
+    } else {
       nQ <- n.quad(Q)
       wQ <- w.quad(Q)
       mQ <- marks.quad(Q)   ## is NULL for unmarked patterns
@@ -456,6 +477,7 @@ mpl.prepare <- local({
                    SUBSET = sQ)
     }
 
+    
     if(savecomputed)
       computed$dotmplbase <- .mpl
   
@@ -486,7 +508,7 @@ mpl.prepare <- local({
     internal.names <- c(".mpl.W", ".mpl.Y", ".mpl.Z", ".mpl.SUBSET",
                         "SUBSET", ".mpl")
 
-    reserved.names <- c("x", "y", "marks", internal.names)
+    reserved.names <- c(reserved.vars, internal.names)
 
     if(allcovar || want.trend || want.subset) {
       trendvariables <- variablesinformula(trend)
@@ -500,16 +522,22 @@ mpl.prepare <- local({
         if(cc != "") stop(cc)
         trendvariables <- union(trendvariables, subsetvariables)
       }
-      ## Standard variables
-      if(allcovar || "x" %in% trendvariables)
-        glmdata <- data.frame(glmdata, x=P$x)
-      if(allcovar || "y" %in% trendvariables)
-        glmdata <- data.frame(glmdata, y=P$y)
-      if(("marks" %in% trendvariables) || !is.null(.mpl$MARKS)) {
-        if(is.null(.mpl$MARKS))
-          stop("Model formula depends on marks, but data do not have marks",
-               call.=FALSE)
-        glmdata <- data.frame(glmdata, marks=.mpl$MARKS)
+      if("marks" %in% trendvariables && !is.marked(Q))
+        stop("Model formula involves marks, but data are not marked",
+             call.=FALSE)
+      ## Add reserved variables?
+      reqd <- if(allcovar) reserved.vars else
+              intersect(reserved.vars, trendvariables)
+      if(length(reqd)) {
+        avail <- list(x = P$x,
+                      y = P$y,
+                      marks = .mpl$MARKS)
+        if(has.insitu) {
+          avail <- resolve.defaults(as.list(coords(situ)),
+                                    avail)
+        }
+        glmdata <- cbind(glmdata,
+                         as.data.frame(avail[reqd]))
       }
       ##
       ## Check covariates
@@ -814,6 +842,9 @@ mpl.prepare <- local({
     fmla <- paste(".mpl.Y ", rhs)
     fmla <- as.formula(fmla)
 
+    ## experimental - attempt to include functions in scope
+    environment(fmla) <- environment(trend)
+    
     ##  character string of trend formula (without Vnames)
     trendfmla <- paste(".mpl.Y ", trendpart)
 

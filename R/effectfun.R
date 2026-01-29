@@ -1,25 +1,46 @@
 #
 #  effectfun.R
 #
-#   $Revision: 1.25 $ $Date: 2020/01/23 05:36:51 $
+#   $Revision: 1.31 $ $Date: 2026/01/05 09:55:29 $
 #
 
-effectfun <- local({
+effectfun <-  local({
 
-  okclasses <- c("ppm", "kppm", "lppm", "dppm", "rppm", "profilepl")
-
-effectfun <-  function(model, covname, ..., se.fit=FALSE, nvalues=256) {
-  if(!inherits(model, okclasses))
-    stop(paste("First argument 'model' should be a fitted model of class",
-               commasep(sQuote(okclasses), " or ")),
-	 call.=FALSE)
+  effectfun <- function(model, covname, ..., se.fit=FALSE, nvalues=256) {
+    okclasses <- c("ppm", "kppm", "lppm", "dppm", "rppm", "profilepl")
+    if(!inherits(model, okclasses))
+      stop(paste("First argument 'model' should be a fitted model of class",
+                 commasep(sQuote(okclasses), " or ")),
+           call.=FALSE)
+    if(missing(covname)) covname <- NULL
+    effectfunEngine(model, covname, ..., se.fit=se.fit, nvalues=nvalues)
+  }
+  
+effectfunEngine <- function(model, covname, ...,
+                            covfunargs=NULL,
+                            se.fit=FALSE, nvalues=256) {
   orig.model <- model	 
   model <- as.ppm(model)
   dotargs <- list(...)
+  covfunargs <- as.list(covfunargs %orifnull% model$covfunargs)
   #' determine names of covariates involved
   intern.names <-
     if(is.marked.ppm(model)) c("x", "y", "marks") else c("x", "y")
   needed.names <- variablesinformula(rhs.of.formula(formula(model)))
+  defaultable.names <- character(0)
+  if(is.rppm(orig.model)) {
+    ## not all variables are used in splits
+    splitvariables <- setdiff(unique(orig.model$rp$frame$var), "<leaf>")
+    defaultable.names <- setdiff(needed.names, splitvariables)
+    needed.names <- splitvariables
+  }
+  if(length(mcdata <- model$covariates)) {
+    ## spatially constant covariates?
+    isconstant <- sapply(mcdata, is.constant.covariate)
+    constant.names <- names(mcdata)[isconstant] 
+    defaultable.names <- c(defaultable.names, constant.names)
+    needed.names <- setdiff(needed.names, defaultable.names)
+  }
   #' check for clashes/quirks
   if("lambda" %in% needed.names) {
     if(is.dppm(orig.model) && (
@@ -31,15 +52,19 @@ effectfun <-  function(model, covname, ..., se.fit=FALSE, nvalues=256) {
     intensityname <- setdiff(c("Lambda", "intensity"), needed.names)[1]
   } else intensityname <- "lambda"
   ## validate the relevant covariate 
-  if(missing(covname) || is.null(covname)) {
+  if(is.null(covname)) {
     mc <- model.covariates(model)
-    if(length(mc) == 1) covname <- mc else stop("covname must be provided")
+    if(length(mc) == 1) {
+      covname <- mc
+    } else if(length(needed.names) == 1) {
+      covname <- needed.names
+    } else stop("covname must be provided", call.=FALSE)
   }
   if(!is.character(covname))
     stop("covname should be a character string", call.=FALSE)
   if(length(covname) != 1L)
     stop("covname should be a single character string", call.=FALSE)
-  # check that fixed values for all other covariates are provided 
+  #' check that fixed values for all other covariates are provided 
   given.covs <- names(dotargs)
   if(any(uhoh <- !(needed.names %in% c(given.covs, covname)))) {
     nuh <- sum(uhoh)
@@ -99,9 +124,21 @@ effectfun <-  function(model, covname, ..., se.fit=FALSE, nvalues=256) {
       if(is.null(Z))
         stop(paste("Cannot find covariate", sQuote(covname)),
              call.=FALSE)
-      # convert to image
-      if(!is.im(Z))
-        Z <- as.im(Z, W=as.owin(model))
+
+      if(!is.im(Z)) {
+        #' convert to image
+        if(is.function(Z)) {
+          #' may require additional arguments 'covfunargs'
+          cfn <- intersect(names(covfunargs), names(formals(Z)))
+          cfa <- covfunargs[cfn]
+          Z <- do.call(as.im.function,
+                       append(list(X=Z, W=as.owin(model)),
+                              cfa))
+        } else {
+          Z <- as.im(Z, W=as.owin(model))
+        }
+      }
+      
       covtype <- Z$type
       switch(covtype,
              real={
@@ -118,8 +155,8 @@ effectfun <-  function(model, covname, ..., se.fit=FALSE, nvalues=256) {
              )
     }
   }
-  # set up data frames of fake data for predict method
-  # First set up default, constant value for each covariate
+  #' set up data frames of fake data for predict method
+  #' First the spatial locations and marks
   N <- length(Zvals)
   fakeloc <- resolve.defaults(dotargs,
                               list(x=0, y=0))[c("x","y")]
@@ -133,11 +170,27 @@ effectfun <-  function(model, covname, ..., se.fit=FALSE, nvalues=256) {
     }
   }
   fakeloc <- lapply(fakeloc, padout, N=N)
-  fakecov <- lapply(dotargs, padout, N=N)
-  # Overwrite value for covariate of interest
-  if(covname %in% intern.names)
+  #' Initialise default, constant value for each covariate given in call
+  dotextra <- dotargs[setdiff(names(dotargs), intern.names)]
+  fakecov <- lapply(dotextra, padout, N=N)
+  #' Overwrite value for covariate of interest
+  if(covname %in% intern.names) {
     fakeloc[[covname]] <- Zvals
-  else fakecov[[covname]] <- Zvals
+  } else {
+    fakecov[[covname]] <- Zvals
+  }
+  #' Fill in defaults for covariates not given so far
+  if(length(defaulting <- setdiff(defaultable.names, names(fakecov)))) {
+    gd <- getglmdata(model)
+    if(length(unresolved <- setdiff(defaulting, names(gd)))) {
+      stop(paste("Unable to determine a default value for",
+                 ngettext(length(unresolved), "covariate", "covariates"),
+                 commasep(sQuote(unresolved))),
+           call.=FALSE)
+    }
+    fakecov <- append(fakecov,
+                      lapply(as.list(gd)[defaulting], padout, N=N))
+  }
   # convert to data frame
   fakeloc <- do.call(data.frame, fakeloc)
   fakecov <- if(length(fakecov) > 0) do.call(data.frame, fakecov) else NULL
@@ -189,7 +242,16 @@ effectfun <-  function(model, covname, ..., se.fit=FALSE, nvalues=256) {
   return(result)
 }
 
- padout <- function(x,N) { rep.int(x[1L],N) }
+padout <- function(x,N) { rep.int(x[1L],N) }
 
- effectfun
+is.constant.covariate <- function(x) {
+  if(is.numeric(x) || is.im(x)) {
+    ra <- range(x, na.rm=TRUE)
+    ok <- (diff(range(x)) == 0)
+    return(ok)
+  }
+  return(FALSE)
+}
+
+    effectfun
 })

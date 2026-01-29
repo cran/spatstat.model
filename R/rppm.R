@@ -3,7 +3,7 @@
 #' 
 #'  Recursive Partitioning for Point Process Models
 #'
-#'  $Revision: 1.24 $  $Date: 2023/02/14 04:25:45 $
+#'  $Revision: 1.25 $  $Date: 2026/01/21 06:26:39 $
 
 rppm <- function(..., rpargs=list()) {
   ## do the equivalent of ppm(...)
@@ -131,6 +131,8 @@ response.rppm <- function(object) {
   data.ppm(as.ppm(object))
 }
 
+is.rppm <- function(x) { inherits(x, "rppm") }
+
 is.poisson.rppm <- function(x) { is.poisson(as.ppm(x)) }
 
 is.marked.rppm <- function(X, ...) { is.marked(as.ppm(X)) }
@@ -146,10 +148,13 @@ residuals.rppm <- function(object,
   residualMeasure(Q, lambda, type)
 }
 
-terms.rppm <- function(x, ...) { terms(x$pfit) }
+terms.rppm <- function(x, ...) { terms(as.ppm(x)) }
+
+formula.rppm <- function(x, ...) { formula(as.ppm(x)) }
 
 update.rppm <- function(object, ..., envir=environment(terms(object))) {
-  pfit <- update(object$pfit, ..., envir=envir)
+  pfit <- as.ppm(object)
+  pfit <- update(pfit, ..., envir=envir)
   if(!is.poisson(pfit))
     warning("Interpoint interaction will be ignored", call.=FALSE)
   df <- getglmdata(pfit)

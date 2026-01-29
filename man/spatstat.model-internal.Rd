@@ -49,6 +49,7 @@
 \alias{flipxy.msr}
 \alias{forbid.logi}
 \alias{formula.hackglmmPQL} 
+\alias{formula.rppm} 
 \alias{getdataname}
 \alias{getglmdata}
 \alias{getglmdata.ppm}
@@ -96,6 +97,7 @@
 \alias{is.poisson.mppm}
 \alias{is.poisson.rppm}
 \alias{is.poissonclusterprocess.clusterprocess}
+\alias{is.rppm}
 \alias{Kpcf.kppm}
 \alias{Kmodel.clusterprocess}
 \alias{Kmodel.slrm}
@@ -129,8 +131,9 @@
 \alias{optimNsteps}
 \alias{outdated.interact}
 \alias{oversize.quad}
-\alias{parameters.detpointprocfamily}
 \alias{PairPotentialType}
+\alias{parameters.detpointprocfamily}
+\alias{parseRPPM}
 \alias{partialModelMatrix}
 \alias{partialResidualEngine}
 \alias{pcfmodel.clusterprocess}
@@ -307,6 +310,7 @@ fii(interaction, coefs, Vnames, IsOffset, vnameprefix)
 \method{flipxy}{msr}(X)
 forbid.logi(object)
 \method{formula}{hackglmmPQL}(x, \dots)
+\method{formula}{rppm}(x, \dots)
 getdataname(defaultvalue, \dots, dataname)
 getglmdata(object, \dots)
 \method{getglmdata}{ppm}(object, \dots, drop=FALSE)
@@ -355,6 +359,7 @@ is.mppm(x)
 \method{is.poisson}{mppm}(x)
 \method{is.poisson}{rppm}(x)
 \method{is.poissonclusterprocess}{clusterprocess}(model)
+is.rppm(x)
 Kpcf.kppm(model, what)
 \method{Kmodel}{clusterprocess}(model, \dots)
 \method{Kmodel}{slrm}(model, \dots)
@@ -382,7 +387,7 @@ LurkEngine(object, type, cumulative, plot.sd,
            quadpoints, wts, Z, subQset, 
            covvalues, resvalues, 
            clip, clipwindow, cov.is.im, covrange, 
-           typename, covname,
+           typename, covname, covunits,
            cl, clenv,
            oldstyle, check,
            verbose, nx, splineargs,
@@ -428,6 +433,7 @@ outdated.interact(object)
 oversize.quad(Q, \dots, nU, nX, p)
 PairPotentialType(pairpot)
 \method{parameters}{detpointprocfamily}(model, \dots)
+parseRPPM(X, \dots, weed, result, verbose)
 partialModelMatrix(X,D,model,callstring,\dots)
 partialResidualEngine(model, covariate, \dots,
      smooth.effect, subregion, bw, adjust, from, to, n,
@@ -502,7 +508,7 @@ reincarnate.interact(object)
 \method{residuals}{exactppm}(object, type, \dots)
 resid4plot(RES, plot.neg, plot.smooth,
            spacing, outer, srange, monochrome, main,
-           xlab, ylab, rlab, col.neg, col.smooth, \dots)
+           xlab, ylab, rlab, col.neg, col.smooth, do.plot, \dots)
 resid1plot(RES, opt, plot.neg, plot.smooth,
               srange, monochrome, main,
               add, show.all, do.plot, col.neg, col.smooth, \dots)
@@ -555,7 +561,7 @@ tweak.coefs(model, new.coef)
 \method{unitname}{msr}(x) <- value 
 \method{update}{ippm}(object, \dots, envir) 
 \method{update}{msr}(object, \dots)
-\method{updateData}{ppm}(model, X, \dots, warn, use.internal)
+\method{updateData}{ppm}(model, X, \dots, envir, warn, use.internal)
 \method{updateData}{kppm}(model, X, \dots)
 \method{updateData}{dppm}(model, X, \dots)
 \method{updateData}{slrm}(model, X, \dots)

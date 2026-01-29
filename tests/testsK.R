@@ -15,7 +15,7 @@ cat(paste("--------- Executing",
 #
 # tests/kppm.R
 #
-# $Revision: 1.42 $ $Date: 2025/09/19 02:53:00 $
+# $Revision: 1.44 $ $Date: 2025/12/07 02:48:05 $
 #
 # Test functionality of kppm that once depended on RandomFields
 # Test update.kppm for old style kppm objects
@@ -27,8 +27,9 @@ local({
 
  fit <- kppm(redwood ~1, "Thomas") # sic
  fitx <- kppm(redwood ~x, "Thomas", verbose=TRUE)
+
  if(FULLTEST) {
-   fitx <- update(fit, ~ . + x)
+   fit1x <- update(fit, ~ . + x)
    fitM <- update(fit, clusters="MatClust")
    fitC <- update(fit, cells)
    fitCx <- update(fit, cells ~ x)
@@ -38,16 +39,34 @@ local({
    fitWsub <- kppm(redwood ~1, "Thomas", subset=Wsub)
    fitZsub <- kppm(redwood ~1, "Thomas", subset=Zsub)
    fitWsub
- 
-   #' various methods
+   #' various methods for class kppm
    ff <- as.fv(fitx)
    uu <- unitname(fitx)
    unitname(fitCx) <- "furlong"
    mo <- model.images(fitCx)
    p <- psib(fit)
    px <- psib(fitx)
+   #' different fitting algorithms/ code blocks
+   #' stationary
+   fat <- kppm(redwood ~1, method="mincon") 
+   fat <- kppm(redwood ~1, method="palm") 
+   fat <- kppm(redwood ~1, method="clik2") 
+   fat <- kppm(redwood ~1, method="waag")
+   #' nonstationary
+   fat <- kppm(redwood ~x, method="mincon") 
+   fat <- kppm(redwood ~x, method="palm") 
+   fat <- kppm(redwood ~x, method="clik2") 
+   fat <- kppm(redwood ~x, method="waag")
+   #' check code coverage of recently implemented option: method = 'waag'
+   nobs(fat)
+   logLik(fat)
+   extractAIC(fat)
+   AIC(fat)
+   step(fat)
  }
+ 
  if(ALWAYS) {
+   #' simulate.kppm
    Y <- simulate(fitx, seed=42, saveLambda=TRUE)[[1]]
    stopifnot(is.im(attr(Y, "Lambda")))
  }
@@ -118,6 +137,7 @@ local({
    if(FULLTEST) {
      fit1pClik <- update(fit1p, method="clik")
      fit1pPalm <- update(fit1p, method="palm")
+     fit1pWaag <- update(fit1p, method="waag")
    }
 
    ## shortcut evaluation of pcf
@@ -182,6 +202,7 @@ local({
   gut <- improve.kppm(fit, vcov=TRUE, fast.vcov=TRUE, save.internals=TRUE)
   hut <- kppm(redwood ~ x, method="clik", weightfun=NULL)
   hut <- kppm(redwood ~ x, method="palm", weightfun=NULL)
+  hut <- kppm(redwood ~ x, method="waag", weightfun=NULL)
   mut <- kppm(redwood)
   nut <- update(mut, YR)
 })
@@ -246,6 +267,9 @@ local({
   fut2 <- kppm(redwood ~ x, "LGCP", method="palm")
   print(summary(fut2))
   b <- residuals(fut2)
+  fut3 <- kppm(redwood ~ x, "LGCP", method="waag")
+  print(summary(fut3))
+  b <- residuals(fut3)
   #'
   po <- ppm(redwood ~ 1)
   A <- kppmComLik(redwood, Xname="redwood", po=po, clusters="Thomas",
