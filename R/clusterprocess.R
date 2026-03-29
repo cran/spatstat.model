@@ -1,7 +1,7 @@
 #'
 #'   clusterprocess.R
 #'
-#'   $Revision: 1.2 $ $Date: 2025/05/16 07:14:33 $
+#'   $Revision: 1.4 $ $Date: 2026/02/27 06:37:01 $
 #'
 
 #' clusterprocess() is defined in spatstat.random
@@ -9,6 +9,12 @@
 #' The following methods are for generics defined in spatstat.model
 
 is.poissonclusterprocess.clusterprocess <- function(model) { TRUE }
+
+psib.clusterprocess <- function(object) {
+  g <- pcfmodel(object)
+  p <- 1 - 1/g(0)
+  return(p)
+}
 
 pcfmodel.clusterprocess <- function(model, ...) {
   p <- model$rules$pcf
@@ -29,3 +35,10 @@ Kmodel.clusterprocess <- function(model, ...) {
   }
   return(f)
 }
+
+Lmodel.clusterprocess <- function(model, ...) {
+  Kfun <- Kmodel(model, ...)
+  Lfun <- function(r) { sqrt(Kfun(r)/pi) }
+  return(Lfun)
+}
+

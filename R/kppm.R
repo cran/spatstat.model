@@ -3,7 +3,7 @@
 #'
 #'  kluster/kox point process models
 #'
-#'  $Revision: 1.240 $ $Date: 2025/12/19 02:52:53 $
+#'  $Revision: 1.241 $ $Date: 2026/02/26 09:46:28 $
 #'
 #'  Copyright (c) 2001-2025 Adrian Baddeley, Rolf Turner, Ege Rubak,
 #'                Abdollah Jalilian and Rasmus Plenge Waagepetersen
@@ -832,6 +832,12 @@ Kmodel.kppm <- function(model, ...) {
   Kpcf.kppm(model, what="K")
 }
 
+Lmodel.kppm <- function(model, ...) {
+  Kfun <- Kpcf.kppm(model, what="K")
+  Lfun <- function(r) { sqrt(Kfun(r)/pi) }
+  return(Lfun)
+}
+
 pcfmodel.kppm <- function(model, ...) {
   Kpcf.kppm(model, what="pcf")
 }
@@ -986,7 +992,9 @@ is.poissonclusterprocess.kppm <- function(model) { isTRUE(model$isPCP) }
 #' cluster strength
 
 clusterstrength <- function(object) {
-  verifyclass(object, "kppm")
+  if(!inherits(object, c("kppm", "clusterprocess")))
+    stop("'object' should have class 'kppm' or 'clusterprocess'",
+         call.=FALSE)
   g <- pcfmodel(object)
   phi <- g(0) - 1
   return(phi)
@@ -995,7 +1003,12 @@ clusterstrength <- function(object) {
 #' spatial persistence index
 
 persist <- function(object, W=Window(object)) {
-  verifyclass(object, "kppm")
+  if(!inherits(object, c("kppm", "clusterprocess")))
+    stop("'object' should have class 'kppm' or 'clusterprocess'",
+         call.=FALSE)
+  if((missing(W) || is.null(W)) && inherits(object, "clusterprocess"))
+    stop("A window W is required when the model is a 'clusterprocess'",
+         call.=FALSE)
   stopifnot(is.owin(W))
   g <- pcfmodel(object)
   d <- diameter(W)

@@ -1,19 +1,22 @@
 \name{Kmodel}
 \alias{Kmodel}
+\alias{Lmodel}
 \alias{pcfmodel}
 \title{K Function or Pair Correlation Function of a Point Process Model}
 \description{
-  Returns the theoretical \eqn{K} function or the pair correlation function
-  of a point process model.
+  Returns the theoretical \eqn{K} function, \eqn{L} function or
+  pair correlation function of a point process model.
 }
 \usage{
    Kmodel(model, \dots)
 
    pcfmodel(model, \dots)
+
+   Lmodel(model, \dots)
 }
 \arguments{
   \item{model}{
-    A fitted point process model of some kind.
+    A point process model of some kind.
   }
   \item{\dots}{
     Ignored.
@@ -28,13 +31,15 @@
   write down a mathematical expression for the \eqn{K} function
   or the pair correlation function of the model. 
   
-  The functions \code{Kmodel} and \code{pcfmodel} give the
-  theoretical \eqn{K}-function and the theoretical pair correlation
-  function for a point process model that has been fitted to data.
+  The functions \code{Kmodel}, \code{Lmodel} and \code{pcfmodel} give the
+  theoretical \eqn{K}-function, \eqn{L}-function and pair correlation
+  function for a point process model.
   
-  The functions \code{Kmodel} and \code{pcfmodel} are generic,
-  with methods for the classes \code{"kppm"} (cluster processes
-  and Cox processes) and \code{"ppm"} (Gibbs processes).
+  The functions \code{Kmodel}, \code{Lmodel} and \code{pcfmodel} are generic,
+  with methods for the classes \code{"kppm"} (fitted cluster processes
+  and Cox processes), \code{"ppm"} (fitted Gibbs processes)
+  and \code{"clusterprocess"} (cluster process models with
+  specified values of the parameters).
   
   The return value is a \code{function} in the \R language,
   which takes one argument \code{r}.
@@ -47,10 +52,13 @@
   to estimate the \eqn{K} function or pair correlation function
   nonparametrically from data.
 
-  \code{\link{Kmodel.kppm}} for the method for cluster processes
+  \code{\link{Kmodel.kppm}} for the method for fitted cluster processes
   and Cox processes.
   
-  \code{\link{Kmodel.ppm}} for the method for Gibbs processes.
+  \code{\link{Kmodel.clusterprocess}} for the method for
+  cluster process models with specified parameter values.
+  
+  \code{\link{Kmodel.ppm}} for the method for fitted Gibbs processes.
 }
 \author{
   \spatstatAuthors.
