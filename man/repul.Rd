@@ -1,31 +1,55 @@
-\name{repul.dppm}
+\name{repul}
 \alias{repul}
 \alias{repul.dppm}
+\alias{repul.detpointprocfamily}
+\alias{repul.clusterprocess}
+\alias{repul.kppm}
+\alias{repul.ppm}
+\alias{repul.slrm}
+\alias{repul.rppm}
+\alias{repul.mppm}
 \title{
-  Repulsiveness Index of a Determinantal Point Process Model
+  Repulsiveness Index of a Point Process Model
 }
 \description{
   Computes a measure of the degree of repulsion between points
-  in a determinantal point process model.
+  in a point process model.
 }
 \usage{
 repul(model, \dots)
 
 \method{repul}{dppm}(model, \dots)
+
+\method{repul}{detpointprocfamily}(model, \dots)
+
+\method{repul}{clusterprocess}(model, \dots)
+
+\method{repul}{kppm}(model, \dots)
+
+\method{repul}{ppm}(model, \dots)
+
+\method{repul}{slrm}(model, \dots)
+
+\method{repul}{rppm}(model, \dots)
+
+\method{repul}{mppm}(model, \dots)
 }
 \arguments{
   \item{model}{
     A fitted point process model
-    of determinantal type (object of class \code{"dppm"}).
+    (object of class \code{"dppm"},
+    \code{"kppm"}, \code{"ppm"}, \code{"slrm"}, \code{"rppm"} or \code{"mppm"})
+    or a point process specified by its
+    parameters (object of class \code{"detpointprocfamily"}
+    or \code{"clusterprocess"}).
   }
   \item{\dots}{
     Ignored.
   }
 }
 \details{
-  The repulsiveness index \eqn{\mu}{mu} of a determinantal
-  point process model was defined by
-  Lavancier, \Moller and Rubak (2015) as
+  The repulsiveness index \eqn{\mu}{mu} of a
+  point process model was defined by Lavancier, \Moller and Rubak (2015) as
   \deqn{
     \mu = \lambda \int (1- g(x)) \, dx
   }{
@@ -36,14 +60,30 @@ repul(model, \dots)
   the integral is taken over all two-dimensional vectors \eqn{x}.
 
   Values of \eqn{\mu} are dimensionless.
-  Larger values of \eqn{\mu}{mu} indicate stronger repulsion
-  between points.
+  Larger positive values of \eqn{\mu}{mu} indicate stronger repulsion
+  between points. 
 
+  The repulsiveness index was originally defined for
+  determinantal point processes, but the same definition can be applied
+  to other kinds of point process models. The repulsiveness index is
+  positive for a determinantal point process model, zero for a Poisson
+  process or spatial logistic regression model, negative for
+  a cluster process or Cox process, and typically positive for a
+  Gibbs process.
+  
   If the model is stationary, the result is a single number.
 
   If the model is not stationary, 
   the result is a pixel image (obtained by multiplying
   the spatially-varying intensity by the integral defined above).
+
+  For Gibbs models of class \code{"ppm"} the calculation uses the
+  Poisson-saddlepoint approximation to the pair correlation function,
+  and is only implemented for stationary unmarked processes.
+
+  For models of class \code{"mppm"} the result is a numeric vector
+  or a list of images, with one entry for each point pattern to which
+  the model was fitted.
 }
 \value{
   A numeric value or a pixel image.
@@ -51,7 +91,7 @@ repul(model, \dots)
 \references{
   Lavancier, F., \Moller, J.  and Rubak, E. (2015),
   Determinantal point process models and statistical inference.
-  \emph{Journal of Royal Statistical Society:
+  \emph{Journal of the Royal Statistical Society:
     Series B (Statistical Methodology)},
   \bold{77}, 853--877.
 }
@@ -70,6 +110,11 @@ repul(model, \dots)
   }
   fit <- dppm(jpines ~ 1, dppGauss)
   repul(fit)
+
+  m <- dppGauss(lambda=10, alpha=0.1, d=2)
+  repul(m)
+
+  repul(kppm(redwood ~ 1))
 }
 \keyword{spatial}
 \keyword{models}

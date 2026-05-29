@@ -3,7 +3,7 @@
 #'
 #'  kluster/kox point process models
 #'
-#'  $Revision: 1.241 $ $Date: 2026/02/26 09:46:28 $
+#'  $Revision: 1.245 $ $Date: 2026/05/27 05:58:31 $
 #'
 #'  Copyright (c) 2001-2025 Adrian Baddeley, Rolf Turner, Ege Rubak,
 #'                Abdollah Jalilian and Rasmus Plenge Waagepetersen
@@ -556,19 +556,19 @@ print.kppm <- print.dppm <- function(x, ...) {
       splat("Fitted mean of log of random intensity:", moo)
     }
   }
+  parbreak(terselevel)
   if(isDPP) {
     rx <- repul(x)
     splat(if(is.im(rx)) "(Average) strength" else "Strength",
           "of repulsion:", signif(mean(rx), 4))
-  }
-  if(isPCP) {
-    parbreak(terselevel)
+  } else {
     g <- pcfmodel(x)
     phi <- g(0) - 1
     splat("Cluster strength: phi = ", signif(phi, 4))
-    psib <- phi/(1+phi)
-    splat("Sibling probability: psib = ", signif(psib, 4))
-    
+    if(isPCP) {
+      psib <- phi/(1+phi)
+      splat("Sibling probability: psib = ", signif(psib, 4))
+    }
   }
   invisible(NULL)
 }
@@ -641,6 +641,9 @@ plot.kppm <- local({
   plot.kppm
 })
 
+intensity.kppm <- function(X, ...) {
+  intensity(as.ppm(X), ...)
+}
 
 predict.kppm <- predict.dppm <- function(object, ...) {
   se <- resolve.1.default(list(se=FALSE), list(...))
@@ -1014,4 +1017,31 @@ persist <- function(object, W=Window(object)) {
   d <- diameter(W)
   v <- (g(d)-1)/(g(0)-1)
   return(v)
+}
+
+#' repulsion index (originally defined for dpp)
+
+repul.kppm <- function(model, ...) {
+  if(isTRUE(model$isPCP) && !is.null(mu <- model$mu)) {
+    return(-mu)
+  }
+  g <- pcfmodel(model)
+  f <- function(x) { 2 * pi * x * (1 - g(x)) }
+  rmax <- reach(model)
+  h <- integrate(f, 0, rmax)$value
+  lam <- intensity(model)
+  ans <- h * lam
+  return(ans)
+}
+
+#' also for class 'clusterprocess' defined in spatstat.random
+
+repul.clusterprocess <- function(model, ...) {
+  g <- pcfmodel(model)
+  f <- function(x) { 2 * pi * x * (1 - g(x)) }
+  rmax <- reach(model)
+  h <- integrate(f, 0, rmax)$value
+  lam <- intensity(model)
+  ans <- h * lam
+  return(ans)
 }

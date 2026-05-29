@@ -1,11 +1,24 @@
 #
 #    predictmppm.R
 #
-#	$Revision: 1.22 $	$Date: 2025/11/18 04:25:56 $
+#	$Revision: 1.24 $	$Date: 2026/05/17 03:22:59 $
 #
 #
 # -------------------------------------------------------------------
 
+intensity.mppm <- function(X, ...) {
+  v <- lapply(subfits(X), intensity, ...)
+  if(all(isim <- sapply(v, is.im)))
+    return(as.solist(v))
+  if(all(isnum <- sapply(v, is.numeric)))
+    return(simplify2array(v))
+  if(all(isnum | isim)) {
+    ## convert numbers to images
+    return(harmonise(v))
+  }
+  return(v)
+}
+     
 predict.mppm <- local({
 
   predict.mppm <- function(object, ..., newdata=NULL, type=c("trend", "cif"),
@@ -29,6 +42,7 @@ predict.mppm <- local({
     ##
     ##   hidden arguments
     selfcheck <- resolve.defaults(list(...), list(selfcheck=FALSE))$selfcheck
+    rule.pix <- list(...)$rule.pix
     ##
     ##  Argument 'type'
     ##             
@@ -368,7 +382,7 @@ predict.mppm <- local({
       ## Generate grids of dummy locations 
       if(verbose)
         cat("(grids)...")
-      Gridded <- lapply(Wins, gridsample, ngrid=ngrid)
+      Gridded <- lapply(Wins, gridsample, ngrid=ngrid, rule.pix=rule.pix)
       Dummies   <- lapply(Gridded, getElement, name="D")
       Templates <- lapply(Gridded, getElement, name="I")
     } else {
@@ -538,14 +552,14 @@ predict.mppm <- local({
 
   levelsofmarks <- function(X) { levels(marks(X)) }
       
-  gridsample <- function(W, ngrid) {
+  gridsample <- function(W, ngrid, rule.pix=NULL) {
     if(is.NAobject(W)) return(NAobject("list"))
-    masque <- as.mask(W, dimyx=ngrid)
+    masque <- as.mask(W, dimyx=ngrid, rule.pix=rule.pix)
     xx <- raster.x(masque)
     yy <- raster.y(masque)
     xpredict <- xx[masque$m]
     ypredict <- yy[masque$m]
-    Dummy <- ppp(xpredict, ypredict, window=W)
+    Dummy <- ppp(xpredict, ypredict, window=W, check=FALSE)
     Image <- as.im(masque)
     return(list(D=Dummy, I=Image))
   }
