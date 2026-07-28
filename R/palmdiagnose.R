@@ -6,21 +6,31 @@
 ## Copyright (c) Adrian Baddeley 2022
 ## GNU Public Licence >= 2.0
 ##
-##  $Revision: 1.4 $ $Date: 2024/08/02 07:07:34 $
+##  $Revision: 1.8 $ $Date: 2026/06/17 07:53:10 $
 
-palmdiagnose <- function(object, ..., breaks=30, trim=30, rmax=Inf) {
+palmdiagnose <- function(object, ..., breaks=30, delta=NULL,
+                         trim=30, rmax=Inf) {
+  if(length(delta) > 0) {
+    check.1.real(delta)
+    breaks <- NULL
+  }
   if(missing(object)) {
     models <- list(...)
     if(length(models) == 0) stop("No fitted models were supplied")
-    if(!all(sapply(models, is.kppm)))
-      stop("Each argument should be a kppm object, or a list of kppm objects")
-  } else if(is.kppm(object)) {
+  } else if(is.kppm(object) || is.dppm(object)) {
     models <- list(object, ...)
-    if(length(models) > 1 && !all(sapply(models, is.kppm)))
-      stop("Each argument should be a kppm object, or a list of kppm objects")
-  } else if(is.list(object) && all(sapply(object, is.kppm))) {
-    models <- object
-  } else stop("Argument 'object' should be a kppm object, or a list of kppm objects")
+  } else if(is.list(object) &&
+            all(sapply(object, inherits, what=c("kppm", "dppm")))) {
+    models <- append(object, list(...))
+  } else {
+    stop(paste("Argument 'object' should be a kppm or dppm object,",
+               "or a list of kppm or dppm objects"),
+         call.=FALSE)
+  }
+  if(!all(sapply(models, inherits, what=c("kppm", "dppm"))))
+    stop(paste("Each argument should be a kppm or dppm object,",
+               "or a list of kppm or dppm objects"),
+         call.=FALSE)
   ## must be stationary
   if(!all(sapply(models, is.stationary)))
     stop("Sorry, not yet implemented for inhomogeneous models")
@@ -45,7 +55,8 @@ palmdiagnose <- function(object, ..., breaks=30, trim=30, rmax=Inf) {
   r <- function(x,y) { sqrt(x^2 + y^2) }
   Z <- frypoints(X, dmax=rmax)
   R <- rhohat(Z, r, weights=tran, smoother="piecewise",
-              breaks=breaks, from = 0, to = if(is.finite(rmax)) rmax else NULL)
+              breaks=breaks, delta=delta,
+              from = 0, to = if(is.finite(rmax)) rmax else NULL)
   breaks <- attr(R, "stuff")$breaks
   ## replace 'ave' by \bar\lambda (using knowledge of Fry points)
   R$ave <- lamX
@@ -114,6 +125,7 @@ plot.palmdiag <- function(x, ..., style=c("intervals", "dots", "bands"),
            if(is.null(xlim)) xlim <- attr(x, "alim")
            rvals <- getElement(x, name=fvnames(x, ".x"))
            xsub <- x[inside.range(rvals, xlim), ]
+           ylim.default <- range(xsub, na.rm=TRUE, finite=TRUE)
            z <- do.call(plot.fv,
                         resolve.defaults(list(quote(x)),
                                          list(fmla,
@@ -121,19 +133,25 @@ plot.palmdiag <- function(x, ..., style=c("intervals", "dots", "bands"),
                                               main=main),
                                          list(...),
                                          list(xlim=xlim,
-                                              ylim=range(xsub, na.rm=TRUE),
+                                              ylim=ylim.default,
                                               legendpos="float")
                                          ))
            b <- attr(x, "breaks")
            rmid <- (b[-1] + b[-length(b)])/2
            f <- as.function(x, value=c("est", "lo", "hi"))
            ymid <- f(rmid)
-           do.call(points, append(list(rmid, ymid), args.dots))
+           do.call(points,
+                   append(list(x=rmid,
+                               y=ymid),
+                          args.dots))
            if(style == "intervals") {
              yhi  <- f(rmid, "hi")
              ylo  <- f(rmid, "lo")
              do.call(segments,
-                     append(list(rmid, ylo, rmid, yhi),
+                     append(list(x0=rmid,
+                                 y0=ylo,
+                                 x1=rmid,
+                                 y1=yhi),
                             args.intervals))
            }
          })

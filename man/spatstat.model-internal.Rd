@@ -94,6 +94,8 @@
 \alias{is.multitype.msr}    
 \alias{is.multitype.rppm}    
 \alias{is.multitype.slrm}    
+\alias{is.poissonclusterprocess.dppm}
+\alias{is.poisson.dppm}
 \alias{is.poisson.mppm}
 \alias{is.poisson.rppm}
 \alias{is.rppm}
@@ -130,6 +132,7 @@
 \alias{nndcumfun}
 \alias{no.trend.ppm}
 \alias{objsurfEngine}
+\alias{objsurfObject}
 \alias{optimConverged}
 \alias{optimStatus}
 \alias{optimNsteps}
@@ -359,6 +362,8 @@ is.mppm(x)
 \method{is.multitype}{msr}(X, \dots)
 \method{is.multitype}{rppm}(X, \dots)
 \method{is.multitype}{slrm}(X, \dots)
+\method{is.poissonclusterprocess}{dppm}(model)
+\method{is.poisson}{dppm}(x)
 \method{is.poisson}{mppm}(x)
 \method{is.poisson}{rppm}(x)
 is.rppm(x)
@@ -433,7 +438,9 @@ no.trend.ppm(x)
 objsurfEngine(objfun, optpar, objargs,
               \dots, dotargs, objname,
               new.objargs, parmap, 
-              ngrid, xlim, ylim, ratio, verbose)
+              ngrid, par1lim, par2lim, ratio, verbose)
+objsurfObject(par1, par2, z, \dots, 
+              optpar, optxy, par1lim, par2lim, parmap, x, y, objname)
 optimConverged(x)
 optimStatus(x, call)
 optimNsteps(x)

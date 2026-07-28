@@ -5,27 +5,34 @@
 }
 \description{
   Given a fitted cluster process or Cox process model,
+  or a fitted determinantal point process model,
   calculate a diagnostic which compares nonparametric and parametric
   estimates of the Palm intensity.
 }
 \usage{
-palmdiagnose(object, \dots, breaks = 30, trim = 30, rmax=Inf)
+palmdiagnose(object, \dots, breaks = 30, delta=NULL, trim = 30, rmax=Inf)
 }
 \arguments{
   \item{object}{
-    Fitted model (object of class \code{"kppm"})
+    Fitted model (object of class \code{"kppm"} or \code{"dppm"})
     or a list of fitted models.
   }
   \item{\dots}{
     Optional.
-    Additional arguments which are fitted models of class \code{"kppm"}.
+    Additional arguments which are fitted models of class \code{"kppm"}
+    or \code{"dppm"}.
   }
   \item{breaks}{
     Optional argument passed to \code{\link[base]{cut.default}}
     determining the breakpoints of distance values 
     for the nonparametric estimate. Either an integer specifying the
     number of breakpoints, or a numeric vector of distance values to be
-    used as the breakpoints.
+    used as the breakpoints. Incompatible with \code{delta}.
+  }
+  \item{delta}{
+    Spacing between breakpoints of distance values for the nonparametric
+    estimate. A single positive number.
+    Incompatible with \code{breaks}.
   }
   \item{trim}{
     Optional. Maximum value of the translation edge correction weight.
@@ -43,7 +50,9 @@ palmdiagnose(object, \dots, breaks = 30, trim = 30, rmax=Inf)
 
   The fitted model \code{object} should be an object of class \code{"kppm"}
   representing a Neyman-Scott cluster process model or a Cox process
-  model. In the current implementation, the model must be stationary.
+  model, or an object of class \code{"dppm"} representing a
+  determinantal point process model. In the current implementation, the
+  model must be stationary. 
 
   The code computes parametric and non-parametric estimates of the
   Palm intensity \eqn{\lambda_0(r)}{\lambda[0](r)}, loosely speaking,
@@ -82,8 +91,10 @@ palmdiagnose(object, \dots, breaks = 30, trim = 30, rmax=Inf)
   in the window containing the original point pattern data. 
 
   If there are additional arguments \code{\dots} which are fitted models
-  of class \code{"kppm"}, or if \code{object} is a list of fitted models
-  of class \code{"kppm"}, then the parametric estimates for each
+  of class \code{"kppm"} or \code{"dppm"},
+  or if \code{object} is a list of fitted models
+  of class \code{"kppm"} or \code{"dppm"},
+  then the parametric estimates for each
   of the fitted models will be included in the resulting function object.
   If names are attached to these fitted models, the names will be used
   in the resulting function object.
@@ -107,9 +118,14 @@ palmdiagnose(object, \dots, breaks = 30, trim = 30, rmax=Inf)
    R <- palmdiagnose(fitK)
    plot(R)
 
+   ## compare two fits
    fitg <- kppm(redwood, statistic="pcf")
    R2 <- palmdiagnose(A=fitK, B=fitg)
    plot(R2)
+
+   ## determinantal model
+   m <- dppm(unmark(anemones), dppGauss, method="palm")
+   plot(palmdiagnose(m))
 }
 \seealso{
   \code{\link{plot.palmdiag}}

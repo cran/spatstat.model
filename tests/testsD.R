@@ -122,7 +122,7 @@ reset.spatstat.options()
 #'
 #'  Diagnostic tools such as diagnose.ppm, qqplot.ppm
 #'
-#'  $Revision: 1.7 $  $Date: 2025/12/19 01:33:20 $
+#'  $Revision: 1.8 $  $Date: 2026/06/17 07:49:55 $
 #'
 
 if(FULLTEST) {
@@ -203,6 +203,17 @@ local({
   fut <- ppm(A ~ x)
   lurking(fut, expression(x), type="raw", envelope=TRUE, nsim=3)
 })
+}
+
+if(FULLTEST) {
+  local({
+    ## Palm diagnostic
+    m <- kppm(redwood ~ 1)
+    p <- palmdiagnose(m, delta=0.04)
+
+    m2 <- dppm(japanesepines ~ 1, dppGauss)
+    p2 <- palmdiagnose(m2)
+  })
 }
 
 #'

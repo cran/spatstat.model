@@ -1,3 +1,70 @@
+        CHANGES IN spatstat.model VERSION 3.7-2
+
+OVERVIEW
+
+    o Package check time reduced, to satisfy CRAN requirements.
+
+    o Variance-covariance matrix for determinantal models.
+    
+    o More diagnostics for determinantal models.
+
+    o Added variable plots for all kinds of models.
+    
+    o Minor improvements and bug fixes.
+
+NEW FUNCTIONS
+
+    o auc.dppm
+    Area under the ROC curve for a fitted determinantal point process model.
+    Method for 'auc' for objects of class 'dppm'.
+    
+    o parres.dppm
+    Partial residuals for a fitted determinantal point process model.
+    Method for 'parres' for objects of class 'dppm'.
+
+    o vcov.dppm
+    Variance-covariance matrix for the trend parameters in a
+    fitted determinantal point process model.
+    
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o addvar
+    Now accepts point process models of class ppm, kppm, dppm, rppm, lppm.
+
+    o addvar
+    For non-Poisson models, significance bands are computed by simulation.
+
+    o plot.kppm
+    For models fitted by Palm likelihood or composite likelihood, the plot
+    selected by 'what="statistic"' displays the pair correlation function.
+
+    o rhohat.ppm, rhohat.slrm
+    Methods for 'rhohat' now recognise the argument 'delta'
+    as an alternative to argument 'breaks' when smoother="piecewise".
+
+    o palmdiagnose
+    Now accepts objects of class 'dppm' as well as 'kppm'.
+    
+    o palmdiagnose
+    New argument 'delta' as an alternative to 'breaks'.
+
+    o objsurf.dppm, objsurf.kppm, objsurf.minconfit
+    Arguments 'xlim, ylim' renamed 'par1lim, par2lim'.
+    
+BUG FIXES
+
+   o plot.kppm
+   For inhomogeneous models fitted by minimum contrast,
+   a warning was issued about truncated function labels.
+   Fixed.
+   
+   o plot.minconfit
+   In some cases, a warning was issued about truncated function labels.
+   Fixed.
+
+   o palmdiagnose
+   Crashed sometimes with a message about a missing polygon.
+   Fixed.
 
         CHANGES IN spatstat.model VERSION 3.7-1
 

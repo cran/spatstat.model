@@ -14,11 +14,16 @@ addvar(model, covariate, ...,
                    from=NULL, to=NULL, n=512,
                    bw.input = c("points", "quad"),
                    bw.restrict = FALSE,
-                   covname, crosscheck=FALSE)
+                   covname, 
+                   bands=c("asymp", "simul", "none"),
+                   envel.args=list(),
+                   crosscheck=FALSE)
 }
 \arguments{
   \item{model}{
-    Fitted point process model (object of class \code{"ppm"}).
+    Fitted point process model (object of class \code{"ppm"},
+    \code{"kppm"}, \code{"dppm"}, \code{"lppm"}, \code{"rppm"} or
+    \code{"profilepl"}).
   }
   \item{covariate}{
     The covariate to be added to the model. Either a
@@ -58,6 +63,17 @@ addvar(model, covariate, ...,
   \item{covname}{
     Optional. Character string to use as the name of the covariate.
   }
+  \item{bands}{
+    Type of calculation to be used to produce significance bands.
+    Character string (partially matched). See the section on
+    Significance Bands.
+  }
+  \item{envel.args}{
+    Optional list of arguments to be passed to
+    \code{\link[spatstat.explore]{envelope}} to control the calculation of the
+    significance bands when \code{bands="simul"}.
+    See the section on Significance Bands.
+  }
   \item{crosscheck}{
     For developers only.
     Logical value indicating whether to perform
@@ -86,7 +102,8 @@ addvar(model, covariate, ...,
   model (Baddeley et al, 2012).
 
   The argument \code{model} should be a fitted spatial point process
-  model (object of class \code{"ppm"}). 
+  model (object of class \code{"ppm"} or something acceptable to
+  \code{\link{as.ppm}}).   
 
   The argument \code{covariate}
   identifies the covariate that is to be considered for addition to
@@ -101,10 +118,10 @@ addvar(model, covariate, ...,
   to the classes \code{"addvar"} and \code{"fv"}. Plot this object to
   generate the added variable plot. 
   
-  Note that the plot method shows the pointwise significance bands
+  The plot method shows the pointwise significance bands
   for a test of the \emph{null} model, i.e. the null hypothesis
-  that the new covariate has no effect.
-
+  that the new covariate has no effect. See the section on Significance Bands.
+  
   The smoothing bandwidth is controlled by the arguments
   \code{bw}, \code{adjust}, \code{bw.input} and \code{bw.restrict}.
   If \code{bw} is a numeric value, then
@@ -124,6 +141,35 @@ addvar(model, covariate, ...,
   If \code{bw.restrict=TRUE} then the bandwidth selection is performed
   using only data from inside the \code{subregion}.
 }
+\section{Significance Bands}{
+  By default, \code{addvar} calculates significance bands
+  for a test of the \emph{null} model, i.e. the null hypothesis
+  that the new \code{covariate} has no effect. These significance bands
+  are included in the result of \code{addvar} and are plotted when the
+  result is plotted. 
+
+  The type of calculation is specified by the argument \code{bands}:
+  \itemize{
+    \item
+    if \code{bands="asymp"} the significance bands are the
+    pointwise two-standard-deviation limits based on asymptotic
+    theory for the Poisson process.
+    \item
+    if \code{bands="simul"} the significance bands are simulation envelopes
+    obtained using simulated realisations of \code{model}.
+   \item
+    If \code{bands="none"}, significance bands are not calculated.
+  }
+  The default is \code{bands="asymp"} if \code{model} is a Poisson point
+  process, and \code{bands="simul"} otherwise.
+
+  If \code{bands="simul"}, the significance bands are calculated
+  by the \code{\link[spatstat.explore]{envelope}} function.
+  The argument \code{envel.args} can be a list of arguments that will
+  be passed to \code{\link[spatstat.explore]{envelope}} to control the type of
+  significance bands (e.g. \code{global=TRUE} for global envelopes)
+  and the number of simulations, etc.
+ }
 \section{Slow computation}{
   In a large dataset, computation can be very slow if the default
   settings are used, because the smoothing bandwidth is selected
@@ -165,7 +211,7 @@ addvar(model, covariate, ...,
 \author{
   \adrian,
   \rolf,
-  Ya-Mei Chang and Yong Song.
+  \yamei and Yong Song.
 }
 \seealso{
   \code{\link{parres}},
@@ -174,10 +220,14 @@ addvar(model, covariate, ...,
 }
 \examples{
   X <-  rpoispp(function(x,y){exp(3+3*x)})
-  model <- ppm(X, ~y)
+  model <- ppm(X ~y)
   adv <- addvar(model, "x")
   plot(adv)
   adv <- addvar(model, "x", subregion=square(0.5))
+
+  kmodel <- kppm(redwood3)
+  nr <- if(interactive()) 39 else 9
+  plot(addvar(kmodel, "x", envel.args=list(nsim=nr)))
 }
 \keyword{spatial}
 \keyword{models}
